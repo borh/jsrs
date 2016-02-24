@@ -10,6 +10,43 @@ Settings
 Moved to
 [settings](http://cookiecutter-django.readthedocs.org/en/latest/settings.html).
 
+## Python Environment
+
+```bash
+source venv/bin/activate # or activate.fish/etc. depending on your shell
+```
+
+## Initial Setup
+
+```bash
+pip install -r requirements/local.txt
+createdb -U postgres jsrs # -U <user-running-jsrs-app> would be better
+# Replace as necessary:
+export DATABASE_URL="postgres://<pg_user_name>:<pg_user_password>@127.0.0.1:5432/jsrs"
+python manage.py migrate
+python manage.py runserver
+```
+
+Visit localhost:8000 to check if everything worked.
+
+Optionally setting up MailHog as SMTP app:
+
+```bash
+curl -O https://github.com/mailhog/MailHog/releases/download/v0.1.8/MailHog_linux_amd64
+mv MailHog_linux_amd64 mailhog
+chmod +x mailhog
+export DJANGO_EMAIL_BACKEND=./mailhog
+```
+
+Install npm prerequisites and confirm serving with grunt works:
+
+```bash
+npm install
+grunt serve
+```
+
+Visit localhost:8000 to check if everything worked.
+
 Basic Commands
 --------------
 
