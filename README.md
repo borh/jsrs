@@ -47,6 +47,17 @@ grunt serve
 
 Visit localhost:8000 to check if everything worked.
 
+## Loading audio file fixtures
+
+First generate audio fixtures using provided python script. Then load the fixtures into the database.
+
+Audio files should be accessible from `data/`.
+
+```bash
+./generate_fixtures.py
+python manage.py loaddata audio-files-fixtures.json
+```
+
 Basic Commands
 --------------
 
