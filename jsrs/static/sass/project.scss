@@ -49,3 +49,9 @@ $red: #b94a48;
 [hidden][style="display: block;"] {
   display: block !important;
 }
+
+// Custom code below
+.hide {
+    visibility: hidden;
+    display: none;
+}
