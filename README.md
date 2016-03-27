@@ -146,7 +146,7 @@ documentation](http://cookiecutter-django.readthedocs.org/en/latest/deployment-w
 
 # Initial App Skeleton Setup
 
-The steps below are only for the record, *do not* run them after intial project setup.
+The steps below are only for the record, *do not* run them after initial project setup.
 
 First set up a Python 3 virtual environment:
 
