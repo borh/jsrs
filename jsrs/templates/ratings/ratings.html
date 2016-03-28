@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <p>A</p>
+  <audio id="a" src="../media/{{ sound_file_a }}" preload="auto"></audio>
+  <button id="a-play-button"  class="">再生</button>
+  <button id="a-pause-button" class="hide">Pause</button>
+</div>
+
+<div class="card">
+  <p>B</p>
+  <audio id="b" src="../media/{{ sound_file_b }}" preload="auto"></audio>
+  <button id="b-play-button"  class="">再生</button>
+  <button id="b-pause-button" class="hide">Pause</button>
+</div>
+
+<div>
+  <p>User id: {{ user_id }}</p>
+  <form action="/ratings/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+  </form>
+</div>
+
+{% endblock content %}
