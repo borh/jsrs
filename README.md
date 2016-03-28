@@ -51,7 +51,7 @@ Visit localhost:8000 to check if everything worked.
 
 First generate audio fixtures using provided python script. Then load the fixtures into the database.
 
-Audio files should be accessible from `data/`.
+Audio files should be accessible from `media/`.
 
 ```bash
 ./generate_fixtures.py
