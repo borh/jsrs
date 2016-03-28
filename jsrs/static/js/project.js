@@ -6,32 +6,24 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  var controls = function(audio_id, play_id, pause_id) {
-    document.getElementById(play_id).onclick = function() {
-      console.log('played');
-      document.getElementById(audio_id).play();
-      document.getElementById(play_id).classList.toggle('hide');
-      document.getElementById(pause_id).classList.toggle('hide');
-    };
+  document.getElementById('play-button').onclick = function() {
+    document.getElementById('a').play();
+    // console.log(document.getElementById('a').currentTime);
+    // document.getElementById('a').addEventlistener('loadedmetadata', function() {
+    //   console.log(document.getElementById('a').duration);
+    // });
 
-    document.getElementById(pause_id).onclick = function() {
-      console.log('paused');
-      document.getElementById(audio_id).pause();
-      document.getElementById(pause_id).classList.toggle('hide');
-      document.getElementById(play_id).classList.toggle('hide');
-    };
-
-    // FIXME
-    document.getElementById(audio_id).on = function(e) {
-      console.log(e);
-      if (e === 'ended') {
-        document.getElementById(pause_id).classList.toggle('hide');
-        document.getElementById(play_id).classList.toggle('hide');
-        document.getElementById(audio_id).load();
-      }
-    };
+    document.getElementById('play-button').classList.toggle('active');
+    document.getElementById('play-button').innerHTML = 'Aを再生中';
   };
 
-  controls('a', 'a-play-button', 'a-pause-button');
-  controls('b', 'b-play-button', 'b-pause-button');
+  document.getElementById('a').onended = function(e) {
+    document.getElementById('b').play();
+    document.getElementById('play-button').innerHTML = 'Bを再生中';
+  };
+
+  document.getElementById('b').onended = function(e) {
+    document.getElementById('play-button').classList.toggle('hide');
+    document.getElementById('rating').classList.toggle('hide');
+  };
 });
