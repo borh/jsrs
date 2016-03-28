@@ -24,3 +24,8 @@
 .hide {
   visibility: hidden;
   display: none; }
+
+.content-rating {
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }

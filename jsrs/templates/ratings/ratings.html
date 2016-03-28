@@ -4,20 +4,23 @@
   <audio id="a" src="../media/{{ sound_file_a }}" preload="auto"></audio>
   <audio id="b" src="../media/{{ sound_file_b }}" preload="auto"></audio>
 
-  <div class="row center-block">
-    <div class="center-block">
-      <button id="play-button" type="button" class="btn btn-primary btn-lg">ペア評価開始</button>
+  <div class="row">
+    <p class="text-xs-center">開始ボタンをクリックすると最後まで聞いて評価を行って下さい。再生回数は一回のみです。</p>
+  </div>
+  <div class="row">
+    <div class="content-rating">
+      <button id="play-button" type="button" class="btn btn-primary btn-lg center-block">ペア評価開始</button>
 
-      <div id="rating" class="hide">
+      <div id="rating" class="hide center-block">
         <form action="/ratings/" method="post">
           {% csrf_token %}
           {{ form.non_field_errors }}
-          <div class="fieldWrapper">
+          <div class="fieldWrapper center-block">
             {{ form.a_gt_b.errors }}
             <label for="{{ form.a_gt_b.id_for_label }}">発音がいいほうを選んで下さい</label>
-            <div class="btn-group btn-group-lg" role="group" aria-label="Rating">
-              <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">A</button>
-              <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">B</button>
+            <div class="btn-group btn-group-lg center-block" role="group" aria-label="Rating">
+              <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">Ａ</button>
+              <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">Ｂ</button>
             </div>
           </div>
         </form>
