@@ -59,20 +59,87 @@ ORDER BY
   rl.audio_b_id''')
     return cursor.fetchall()
 
+# 1.0 両方あるいは片方の評定データのない任意２名の２センテンスを選ぶ。
+# 1.1 判定。
+# 1.2 データベース登録。
+# 1.3 すべてのデータIDに少なくとも1つの判定データがある場合は、2.0.にいく。
+# 1.4 その他、すべてのデータIDに評定がつくまでは、1.0.にいく。
+#
+# 2.1 能力推定値/項目推定値の隣り合った任意２名の同じセンテンスIDのペアを選ぶ。
+# 2.2 判定。
+# 2.3 データベース登録。
+# 2.4 mdpref計算。
+# 2.5 2.1 に戻る。
+
+def get_unrated_pair():
+    '''両方あるいは片方の評定データのない任意２名の２センテンス（同じ文）を選ぶ。'''
+    cursor = connection.cursor()
+    cursor.execute('''
+SELECT
+  a1.id,
+  a2.id
+FROM
+  ratings_ratings AS r
+RIGHT JOIN
+  audio_audio AS a1
+  ON
+    r.audio_a_id=a1.id OR
+    r.audio_b_id=a1.id
+JOIN -- get the pair
+  audio_audio AS a2
+  ON
+    a1.id!=a2.id AND
+    a1.sentence=a2.sentence
+WHERE
+  r.audio_a_id IS NULL OR
+  r.audio_b_id IS NULL
+GROUP BY
+  a1.sentence,
+  a1.group,
+  a2.group,
+  a1.id,
+  a2.id
+ORDER BY
+  a1.sentence
+LIMIT 1
+-- SELECT
+--   a.id
+-- FROM
+--   ratings_ratings AS r
+-- RIGHT JOIN
+--   audio_audio AS a
+-- ON
+--   r.audio_a_id=a.id OR
+--   r.audio_b_id=a.id
+-- WHERE
+--   r.audio_a_id IS NULL OR
+--   r.audio_b_id IS NULL
+-- GROUP BY
+--   a.sentence,
+--   a.group,
+--   a.id
+-- ORDER BY
+--   a.sentence,
+--   a.group
+-- LIMIT 2''')
+    return cursor.fetchall()
+
 from itertools import chain
 def get_next_rating(user_id):
     # TODO use user_id to join with Users table
     # ratings = Ratings.objects.values()
-    ratings = get_all_ratings()
-    print('ratings = {}'.format(ratings))
-    f = [r[0] for r in ratings]
-    n = [r[1] for r in ratings]
-    ij = list(chain.from_iterable(r[2:4] for r in ratings))
-    print(ij)
-    subj = [r[4] for r in ratings]
-    # f = [] # TODO -> direct SQL query easier???
-    print(mdprefmx(f, n, ij, subj))
+    audio_files = get_unrated_pair()
+    if len(audio_files)==0:
+        ratings = get_all_ratings()
+        print('ratings = {}'.format(ratings))
+        f = [r[0] for r in ratings]
+        n = [r[1] for r in ratings]
+        ij = list(chain.from_iterable(r[2:4] for r in ratings))
+        print(ij)
+        subj = [r[4] for r in ratings]
+        # f = [] # TODO -> direct SQL query easier???
+        print(mdprefmx(f, n, ij, subj))
 
-    a = Audio.objects.get(reader='JP_EXPERIMENT_1-1', sentence=1)
-    b = Audio.objects.get(reader='JP_EXPERIMENT_1-2', sentence=1)
+    a = Audio.objects.get(id=audio_files[0][0])
+    b = Audio.objects.get(id=audio_files[0][1])
     return (a, b)
