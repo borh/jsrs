@@ -12,7 +12,7 @@
       <button id="play-button" type="button" class="btn btn-primary btn-lg center-block">ペア評価開始</button>
 
       <div id="rating" class="hide center-block">
-        <form action="/ratings/" method="post">
+        <form action="{% url 'ratings:ratings' %}" method="post">
           {% csrf_token %}
           {{ form.non_field_errors }}
           <div class="fieldWrapper center-block">
