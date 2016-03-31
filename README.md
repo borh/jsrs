@@ -20,7 +20,30 @@ source venv/bin/activate # or activate.fish/etc. depending on your shell
 
 ```bash
 pip install -r requirements/local.txt
+pip install -r requirements/production.txt
+pip install -r requirements/test.txt
+```
+
+Install needed R pacakges (see [README](R/README.md)):
+
+```bash
+cd R
+curl -O http://www.ms.hum.titech.ac.jp/mayekawadocs/Rpackages/lazy.mat_0.1.2.zip
+curl -O http://www.ms.hum.titech.ac.jp/mayekawadocs/Rpackages/lazy.tools_0.1.2.zip
+curl -O http://www.ms.hum.titech.ac.jp/mayekawadocs/Rpackages/lazy.mdpref_0.1.2.zip
+unzip -x lazy.mat_0.1.2.zip
+unzip -x lazy.tools_0.1.2.zip
+unzip -x lazy.mdpref_0.1.2.zip
+Rscript -e "install.packages('naturalsort')"
+R CMD INSTALL lazy.mat
+R CMD INSTALL lazy.tools
+R CMD INSTALL lazy.mdpref
+cd ..
+```
+
+```bash
 createdb -U postgres jsrs # -U <user-running-jsrs-app> would be better
+# 'sudo -u postgres createdb -U postgres jsrs' under peer auth
 # Replace as necessary:
 export DATABASE_URL="postgres://<pg_user_name>:<pg_user_password>@127.0.0.1:5432/jsrs"
 python manage.py migrate
