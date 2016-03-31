@@ -34,7 +34,7 @@
     <div class="m-b">
       <nav class="navbar navbar-light navbar-static-top">
         <div class="container">
-          <a class="navbar-brand" href="/">音声評価システム</a>
+          <a class="navbar-brand" href="{% url 'home' %}">音声評価システム</a>
           <button type="button" class="navbar-toggler hidden-sm-up pull-xs-right" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
             &#9776;
           </button>
@@ -46,7 +46,7 @@
                 <a class="nav-link" href="{% url 'ratings:ratings' %}">評価</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">統計情報</a>
+                <a class="nav-link" href="{% url 'home' %}">統計情報</a>
               </li>
             </ul>
 
@@ -56,14 +56,14 @@
                   <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
+                  <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Log out" %}</a>
                 </li>
               {% else %}
                 <li class="nav-item">
                   <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
                 </li>
                 <li class="nav-item">
-                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Log In" %}</a>
+                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Log in" %}</a>
                 </li>
               {% endif %}
             </ul>
