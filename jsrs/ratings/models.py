@@ -85,7 +85,7 @@ RIGHT JOIN
   ON
     r.audio_a_id=a1.id OR
     r.audio_b_id=a1.id
-JOIN -- get the pair
+JOIN -- get the pair --
   audio_audio AS a2
   ON
     a1.id!=a2.id AND
@@ -101,28 +101,29 @@ GROUP BY
   a2.id
 ORDER BY
   a1.sentence
-LIMIT 1
--- SELECT
---   a.id
--- FROM
---   ratings_ratings AS r
--- RIGHT JOIN
---   audio_audio AS a
--- ON
---   r.audio_a_id=a.id OR
---   r.audio_b_id=a.id
--- WHERE
---   r.audio_a_id IS NULL OR
---   r.audio_b_id IS NULL
--- GROUP BY
---   a.sentence,
---   a.group,
---   a.id
--- ORDER BY
---   a.sentence,
---   a.group
--- LIMIT 2''')
+LIMIT 1''')
     return cursor.fetchall()
+
+## SELECT
+##   a.id
+## FROM
+##   ratings_ratings AS r
+## RIGHT JOIN
+##   audio_audio AS a
+## ON
+##   r.audio_a_id=a.id OR
+##   r.audio_b_id=a.id
+## WHERE
+##   r.audio_a_id IS NULL OR
+##   r.audio_b_id IS NULL
+## GROUP BY
+##   a.sentence,
+##   a.group,
+##   a.id
+## ORDER BY
+##   a.sentence,
+##   a.group
+## LIMIT 2
 
 from itertools import chain
 def get_next_rating(user_id):
