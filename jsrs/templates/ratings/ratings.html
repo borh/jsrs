@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <audio id="a" src="../media/{{ sound_file_a }}" preload="auto"></audio>
-  <audio id="b" src="../media/{{ sound_file_b }}" preload="auto"></audio>
+  <audio id="a" src="{{ MEDIA_URL }}{{ sound_file_a }}" preload="auto"></audio>
+  <audio id="b" src="{{ MEDIA_URL }}{{ sound_file_b }}" preload="auto"></audio>
 
   <div class="row">
     <p class="text-xs-center">開始ボタンをクリックすると最後まで聞いて評価を行って下さい。再生回数は一回のみです。</p>
