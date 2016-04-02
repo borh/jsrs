@@ -19,7 +19,7 @@ import subprocess
 import re
 import json
 
-ROOT_PATH = 'media/'
+ROOT_PATH = 'jsrs/media/'
 
 # 発音評価02 is different
 # JP_EXPERIMENT_1: native speakers
@@ -28,7 +28,7 @@ ROOT_PATH = 'media/'
 
 def audio_files(path):
     '''Generator returning full_path, basename, and extension of all audio files under given path.'''
-    for root, dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(path, followlinks=True):
         for name in files:
             (basename, extension) = os.path.splitext(name)
             full_path = os.path.join(root, name)

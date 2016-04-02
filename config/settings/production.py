@@ -70,9 +70,9 @@ INSTALLED_APPS += (
 )
 # DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # 'whitenoise.django.GzipManifestStaticFilesStorage' # 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# MEDIA_URL = '/media/'
+MEDIA_URL = '/media/'
 
 # EMAIL
 # ------------------------------------------------------------------------------

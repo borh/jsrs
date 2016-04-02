@@ -34,7 +34,8 @@ application = get_wsgi_application()
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.org/
 application = DjangoWhiteNoise(application)
-
+from os.path import abspath
+application.add_files(abspath('jsrs/media'), prefix='media/')
 
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
