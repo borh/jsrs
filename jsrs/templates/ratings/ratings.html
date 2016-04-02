@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% if request.user.is_authenticated %}
   <audio id="a" src="{{ MEDIA_URL }}{{ sound_file_a }}" preload="auto"></audio>
   <audio id="b" src="{{ MEDIA_URL }}{{ sound_file_b }}" preload="auto"></audio>
 
@@ -27,4 +29,7 @@
       </div>
     </div>
   </div>
+{% else %}
+  <p>本システムを利用するのにアカウントの登録が必要です。</p>
+{% endif %}
 {% endblock content %}
