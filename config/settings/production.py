@@ -3,7 +3,7 @@
 Production Configurations
 
 - Use djangosecure
-- Use Amazon's S3 for storing static files and uploaded media
+- Use whitenoise for storing static files and uploaded media
 - Use mailgun to send emails
 - Use Redis on Heroku
 
