@@ -72,7 +72,8 @@ INSTALLED_APPS += (
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # 'whitenoise.django.GzipManifestStaticFilesStorage' # 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
+MEDIA_URL  = '/app/media/'
+STATIC_URL = '/app/static/'
 
 # EMAIL
 # ------------------------------------------------------------------------------
@@ -172,5 +173,3 @@ LOGGING = {
 ADMIN_URL = env('DJANGO_ADMIN_URL')
 
 # Your production stuff: Below this line define 3rd party library settings
-
-FORCE_SCRIPT_NAME = '/app'
