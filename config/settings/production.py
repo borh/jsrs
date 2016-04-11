@@ -78,19 +78,19 @@ STATIC_URL = '/app/static/'
 
 # EMAIL
 # ------------------------------------------------------------------------------
-# DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
-#                          default='jsrs <noreply@cuckoo.ryu.titech.ac.jp>')
-# EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-# MAILGUN_ACCESS_KEY = env('DJANGO_MAILGUN_API_KEY')
-# MAILGUN_SERVER_NAME = env('DJANGO_MAILGUN_SERVER_NAME')
-# EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default='[jsrs] ')
-# SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
+DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
+                         default='jsrs <noreply@cuckoo.ryu.titech.ac.jp>')
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = env('DJANGO_MAILGUN_API_KEY')
+MAILGUN_SERVER_NAME = env('DJANGO_MAILGUN_SERVER_NAME')
+EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default='[jsrs] ')
+SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
-# For debug:
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='django.core.mail.backends.console.EmailBackend')
+# # For debug:
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 1025
+# EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
+#                     default='django.core.mail.backends.console.EmailBackend')
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------
