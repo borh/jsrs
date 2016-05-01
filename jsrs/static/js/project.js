@@ -5,13 +5,27 @@
 
 "use strict";
 
+var switcharoo = function(e, dummyUrl) {
+  var originalSrc = e.src;
+  e.src = dummyUrl;
+  e.play();
+  e.src = originalSrc;
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
+
+  // Workaround for broken audio in mobile Chrome (https://bugs.chromium.org/p/chromium/issues/detail?id=178297)
+  var dummy_url = document.getElementById('dummy').src;
+  switcharoo(document.getElementById('a'), dummy_url);
+  // End of workaround
+
   if (document.getElementById('play-button')) {
     document.getElementById('play-button').onclick = function() {
       if (document.getElementById('play-button').classList.contains('active')) {
         return;
       }
       document.getElementById('a').play();
+      switcharoo(document.getElementById('b'), dummy_url);
       // console.log(document.getElementById('a').currentTime);
       // document.getElementById('a').addEventlistener('loadedmetadata', function() {
       //   console.log(document.getElementById('a').duration);

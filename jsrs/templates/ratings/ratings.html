@@ -3,6 +3,7 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
+  <audio id="dummy" src="{{ STATIC_URL }}dummy.mp3" preload="auto"></audio>
   <audio id="a" src="{{ MEDIA_URL }}{{ sound_file_a }}" preload="auto"></audio>
   <audio id="b" src="{{ MEDIA_URL }}{{ sound_file_b }}" preload="auto"></audio>
 
