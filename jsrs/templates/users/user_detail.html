@@ -21,8 +21,9 @@
 <div class="row">
 
   <div class="col-sm-12 ">
-    <a class="btn btn-primary" href="{% url 'users:update' %}">My Info</a>
-    <a class="btn btn-primary" href="{% url 'account_email' %}">E-Mail</a>
+    <a class="btn btn-primary" href="{% url 'users:update' %}">アカウント情報</a>
+    <a class="btn btn-primary" href="{% url 'account_email' %}">メール</a>
+    <a class="btn btn-primary" href="{% url 'users:rater_update' %}">属性情報</a>
     <!-- Your Stuff: Custom user template urls -->
   </div>
 
@@ -33,4 +34,3 @@
 
 </div>
 {% endblock content %}
-
