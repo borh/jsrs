@@ -8,7 +8,7 @@
   <audio id="b" src="{{ MEDIA_URL }}{{ sound_file_b }}" preload="auto"></audio>
 
   <div class="row">
-    <p class="text-xs-center">開始ボタンをクリックすると最後まで聞いて評価を行って下さい。再生回数は一回のみです。</p>
+    <p class="text-xs-center">開始ボタンをクリックするとA並びにBの音声が流れてきます。最後まで聞いて評価を行って下さい。再生回数は一回のみです。</p>
   </div>
   <div class="row">
     <div class="content-rating">
@@ -22,8 +22,8 @@
             {{ form.a_gt_b.errors }}
             <label for="{{ form.a_gt_b.id_for_label }}">発音がいいほうを選んで下さい</label>
             <div class="btn-group btn-group-lg center-block" role="group" aria-label="Rating">
-              <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">Ａ</button>
-              <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">Ｂ</button>
+              <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">Ａが良い</button>
+              <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">Ｂが良い</button>
             </div>
           </div>
         </form>
