@@ -4,6 +4,8 @@
 
 {% block content %}
 
+{% if request.user.is_superuser %}
+
 <div class="container">
 
     <h2>Users</h2>
@@ -16,5 +18,7 @@
         {% endfor %}
 
     </div>
+
+{% endif %}
 
 {% endblock content %}
