@@ -50,6 +50,12 @@ class Rater(models.Model):
     usual_foreign_language_use = models.CharField(verbose_name='普段の生活での外国語使用', max_length=255, choices=(('日本語と同程度，あるいはそれ以上に、外国語を話す', '日本語と同程度，あるいはそれ以上に、外国語を話す'), ('仕事など特定の場面で話す', '仕事など特定の場面で話す'), ('外国語を話すことは全くないか，殆ど無い', '外国語を話すことは全くないか，殆ど無い')))
     speaking_with_foreigners = models.CharField(verbose_name='外国人と日本語で話す機会', max_length=255, choices=(('日常的にあるが、よくある', '日常的にあるが、よくある'), ('日常的ではないが、たまに話すことはある', '日常的ではないが、たまに話すことはある'), ('殆どないか、全くない', '殆どないか、全くない')))
 
+    def __str__(self):
+        return self.user.__str__()
+
+    def get_absolute_url(self):
+        return reverse('users:rater_detail', kwargs={'user': self.user.__str__()})
+
 # Define an inline admin descriptor for Rater model
 # which acts a bit like a singleton
 
