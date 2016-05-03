@@ -15,8 +15,10 @@ var switcharoo = function(e, dummyUrl) {
 document.addEventListener("DOMContentLoaded", function(event) {
 
   // Workaround for broken audio in mobile Chrome (https://bugs.chromium.org/p/chromium/issues/detail?id=178297)
-  var dummy_url = document.getElementById('dummy').src;
-  switcharoo(document.getElementById('a'), dummy_url);
+  if (document.getElementById('dummy')) {
+    var dummy_url = document.getElementById('dummy').src;
+    switcharoo(document.getElementById('a'), dummy_url);
+  }
   // End of workaround
 
   if (document.getElementById('play-button')) {
