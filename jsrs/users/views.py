@@ -56,7 +56,8 @@ class RaterDetailView(LoginRequiredMixin, DetailView):
 
 class RaterUpdateView(LoginRequiredMixin, UpdateView):
 
-    fields = ['age', 'gender',
+    fields = ['age',
+              'gender',
               'volunteer_experience_time',
               'time_abroad',
               'job',
