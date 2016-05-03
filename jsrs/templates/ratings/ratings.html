@@ -11,17 +11,17 @@
     <p class="text-xs-center">開始ボタンをクリックするとA並びにBの音声が流れてきます。最後まで聞いて評価を行って下さい。再生回数は一回のみです。判定したら自動的に次の評価ペアに移します。</p>
   </div>
   <div class="row">
-    <div class="content-rating">
-      <button id="play-button" type="button" class="btn btn-primary btn-lg center-block">ペア評価開始</button>
+    <div class="content-rating text-center text-xs-center center-block">
+      <button id="play-button" type="button" class="btn btn-primary btn-lg center-block text-center">ペア評価開始</button>
 
-      <div id="rating" class="hide center-block">
+      <div id="rating" class="hide center-block text-center">
         <form action="{% url 'ratings:ratings' %}" method="post">
           {% csrf_token %}
           {{ form.non_field_errors }}
-          <div class="fieldWrapper center-block">
+          <div class="fieldWrapper center-block text-center">
             {{ form.a_gt_b.errors }}
-            <label for="{{ form.a_gt_b.id_for_label }}">発音がいいほうを選んで下さい</label>
-            <div class="btn-group btn-group-lg center-block" role="group" aria-label="Rating">
+            <label for="{{ form.a_gt_b.id_for_label }}">発音が良いと思うほうを選んで下さい</label><br />
+            <div class="btn-group btn-group-lg center-block text-center" role="group" aria-label="Rating">
               <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">Ａが良い</button>
               <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">Ｂが良い</button>
             </div>
