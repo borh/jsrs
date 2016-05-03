@@ -33,4 +33,18 @@ urlpatterns = [
         view=views.UserUpdateView.as_view(),
         name='update'
     ),
+
+    # URL pattern for the RaterDetailView
+    url(
+        regex=r'^rater/(?P<user>[\w.@+-]+)/$',
+        view=views.RaterDetailView.as_view(),
+        name='rater_detail'
+    ),
+
+    # URL pattern for the RaterUpdateView
+    url(
+        regex=r'^~rater_update/$',
+        view=views.RaterUpdateView.as_view(),
+        name='rater_update'
+    ),
 ]
