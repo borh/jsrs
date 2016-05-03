@@ -19,7 +19,6 @@ def ratings_page(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RatingsForm(request.POST)
-        print(form)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
