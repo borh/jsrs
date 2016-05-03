@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}User: {{ object.username }}{% endblock %}
+{% block title %}ユーザ: {{ object.username }}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-sm-12">
 
-      <h2>{{ object.username }}</h2>
+      <h2>{{ object.username }}のプロフィール</h2>
       {% if object.name %}
         <p>{{ object.name }}</p>
       {% endif %}
@@ -21,9 +21,9 @@
 <div class="row">
 
   <div class="col-sm-12 ">
-    <a class="btn btn-primary" href="{% url 'users:update' %}">アカウント情報</a>
+    <a class="btn btn-primary" href="{% url 'users:update' %}">ユーザ名</a>
     <a class="btn btn-primary" href="{% url 'account_email' %}">メール</a>
-    <a class="btn btn-primary" href="{% url 'users:rater_update' %}">属性情報</a>
+    <a class="btn btn-primary" href="{% url 'users:rater_update' %}">アンケート</a>
     <!-- Your Stuff: Custom user template urls -->
   </div>
 
