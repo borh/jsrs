@@ -62,12 +62,14 @@ class Rater(models.Model):
 from django.contrib import admin
 from .admin import UserAdmin as BaseUserAdmin
 
+@python_2_unicode_compatible
 class RaterInline(admin.StackedInline):
     model = Rater
     can_delete = False
     verbose_name_plural = 'rater'
 
 # Define a new User admin
+@python_2_unicode_compatible
 class UserAdmin(BaseUserAdmin):
     inlines = (RaterInline, )
 
