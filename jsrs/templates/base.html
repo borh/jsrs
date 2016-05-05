@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}音声診断システム{% endblock title %}</title>
+    <title>{% block title %}発音診断システム{% endblock title %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="音声診断システム">
     <meta name="author" content="Hodošček Bor">
@@ -23,28 +23,29 @@
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
     {% endblock %}
 
+    <!--
     {% block angular %}
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
     {% endblock %}
+    -->
 
   </head>
 
   <body>
 
     <div class="m-b">
-      <nav class="navbar navbar-light navbar-static-top">
+      <nav class="navbar navbar-dark bg-inverse navbar-static-top">
         <div class="container">
-          <a class="navbar-brand" href="{% url 'home' %}">音声評価システム</a>
+          <a class="navbar-brand" href="{% url 'home' %}">発音診断システム</a>
+          {% if request.user.is_authenticated %}
+          <a class="navbar-brand nav-link" href="{% url 'ratings:ratings' %}">評価</a>
+          {% endif %}
           <button type="button" class="navbar-toggler hidden-sm-up pull-xs-right" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
             &#9776;
           </button>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-toggleable-xs" id="bs-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'ratings:ratings' %}">評価</a>
-              </li>
               <!--
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
@@ -78,14 +79,37 @@
 
     <div class="container">
 
+      <div class="row">
       {% if messages %}
           {% for message in messages %}
               <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
           {% endfor %}
       {% endif %}
+      </div>
 
       {% block content %}
-        <p>発音診断システムでは日本語学習者の発音をクラウドソーシングで評価して頂いています。</p>
+      <div class="col-xs-12">
+      <div class="jumbotron">
+        <h1 class="display-4">発音診断システム</h1>
+        <p class="lead">発音診断システムでは日本語学習者の発音をクラウドソーシングで評価して頂いています。</p>
+        <hr class="m-y-2">
+      {% if request.user.is_authenticated %}
+        <p>{{ request.user.username }}さん、おかえりなさい！</p>
+        <p class="lead">
+          <a class="btn btn-primary" href="{% url 'ratings:ratings' %}" role="button">評価へ</a>
+        </p>
+      {% else %}
+        <p>システムの利用にはアカウント作成が必要です。</p>
+        <p class="lead">
+          <a class="btn btn-primary" href="{% url 'account_signup' %}" role="button">ユーザ登録へ</a>
+        </p>
+        <p>既にアカウントをお持ちの方はログインしてください。</p>
+        <p class="lead">
+          <a class="btn btn-primary" href="{% url 'account_login' %}" role="button">ログインへ　</a>
+        </p>
+      {% endif %}
+      </div>
+      </div>
       {% endblock content %}
 
     </div> <!-- /container -->
