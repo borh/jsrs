@@ -16,6 +16,9 @@ class Audio(models.Model):
     # length = models.IntegerField() # TODO
     # Other metadata...
 
+    class Meta:
+        verbose_name_plural = 'Audio'
+
     def __str__(self):
         return '{}::{}::{}'.format(self.group, self.reader, self.sentence)
 

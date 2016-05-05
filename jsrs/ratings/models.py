@@ -20,6 +20,11 @@ class Ratings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     a_gt_b = models.BooleanField(verbose_name='AがBより良い', choices=BOOL_CHOICES) # True/1 -> a is better; False/0 -> b is better
 
+    class Meta:
+        verbose_name_plural = 'Ratings'
+
+    def __str__(self):
+        return '{}-{}-{}-{}'.format(self.audio_a, self.audio_b, self.user, self.a_gt_b)
 
 from django.db import connection
 
