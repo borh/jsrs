@@ -8,10 +8,13 @@
   <audio id="b" src="{{ MEDIA_URL }}{{ sound_file_b }}" preload="auto"></audio>
 
   <div class="row">
-    <p class="text-xs-center">開始ボタンをクリックするとA並びにBの音声が流れてきます。最後まで聞いて評価を行って下さい。再生回数は一回のみです。判定したら自動的に次の評価ペアに移します。</p>
+    <div class="col-md-12">
+      <p class="p-x-1">開始ボタンをクリックするとA並びにBの音声が流れてきます。最後まで聞いて評価を行って下さい。再生回数は一回のみです。判定したら自動的に次の評価ペアに移します。</p>
+      <hr class="m-y-2"/>
+    </div>
   </div>
   <div class="row">
-    <div class="content-rating text-center text-xs-center center-block">
+    <div class="content-rating text-center text-xs-center center-block col-md-12">
       <button id="play-button" type="button" class="btn btn-primary btn-lg center-block text-center">ペア評価開始</button>
 
       <div id="rating" class="hide center-block text-center">
