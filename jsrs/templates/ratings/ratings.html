@@ -9,7 +9,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="p-x-1">開始ボタンをクリックするとA並びにBの音声が流れてきます。最後まで聞いて評価を行って下さい。再生回数は一回のみです。判定したら自動的に次の評価ペアに移します。</p>
+      <p class="p-x-1">開始ボタンをクリックするとA並びにBの音声が流れてきます。より日本人らしく聞こえるほうを選んでください。再生回数は一回のみです。判定したら自動的に次の評価ペアに移ります。再生に問題がありましたら、上記「評価」ボタンをクリックしてください。</p>
       <hr class="m-y-2"/>
     </div>
   </div>
@@ -23,7 +23,7 @@
           {{ form.non_field_errors }}
           <div class="fieldWrapper center-block text-center">
             {{ form.a_gt_b.errors }}
-            <label for="{{ form.a_gt_b.id_for_label }}">発音が良いと思うほうを選んで下さい</label><br />
+            <label for="{{ form.a_gt_b.id_for_label }}">より日本人らしく聞こえるほうを選んで下さい</label><br />
             <div class="btn-group btn-group-lg center-block text-center" role="group" aria-label="Rating">
               <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">Ａが良い</button>
               <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">Ｂが良い</button>
