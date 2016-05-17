@@ -105,9 +105,11 @@ GROUP BY
   a1.id,
   a2.id
 ORDER BY
-  a1.sentence
+  a1.sentence,
+  a1.id
 LIMIT 1''')
     return cursor.fetchall()
+
 
 ## SELECT
 ##   a.id
