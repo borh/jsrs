@@ -41,7 +41,7 @@ pytz==2016.4
 
 # Redis support
 django-redis==4.4.2
-redis>=2.10.0
+redis>=2.10.5
 
 
 
