@@ -79,7 +79,7 @@ STATIC_URL = '/app/static/'
 # EMAIL
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
-                         default='jsrs <noreply@cuckoo.ryu.titech.ac.jp>')
+                         default='jsrs <noreply@cuckoo.js.ila.titech.ac.jp>')
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
 MAILGUN_ACCESS_KEY = env('DJANGO_MAILGUN_API_KEY')
 MAILGUN_SERVER_NAME = env('DJANGO_MAILGUN_SERVER_NAME')
