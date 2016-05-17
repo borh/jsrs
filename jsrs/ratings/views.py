@@ -25,7 +25,8 @@ def ratings_page(request):
             # ...
             # redirect to a new URL:
             r = Ratings(audio_a=sound_file_a, audio_b=sound_file_b, user=request.user, a_gt_b=form.cleaned_data['a_gt_b'])
-            r.save()
+            if request.user.is_superuser == False:
+                r.save()
             return HttpResponseRedirect(reverse('ratings:ratings'))
 
         # if a GET (or any other method) we'll create a blank form
