@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Ratings, get_next_rating
+from .models import Ratings, get_next_rating, ratings_done
 from .forms import RatingsForm
 
 def ratings_page(request):
@@ -33,9 +33,15 @@ def ratings_page(request):
     else:
         form = RatingsForm()
 
+    rated = ratings_done(request.user.id)
+    rated_goal = 90 # TODO make ratings_set-specific
+
     return render(request,
                   'ratings/ratings.html',
                   {'form': form,
                    'user_id': request.user.id,
+                   'rated': rated,
+                   'rated_progress': round(rated / rated_goal * 100),
+                   'rated_goal': rated_goal,
                    'sound_file_a': sound_file_a.path,
                    'sound_file_b': sound_file_b.path})

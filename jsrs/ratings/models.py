@@ -151,3 +151,6 @@ def get_next_rating(user_id):
     a = Audio.objects.get(id=audio_files[0][0])
     b = Audio.objects.get(id=audio_files[0][1])
     return (a, b)
+
+def ratings_done(user_id):
+    return Ratings.objects.filter(user_id=user_id).count()
