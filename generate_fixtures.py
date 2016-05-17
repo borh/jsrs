@@ -20,23 +20,31 @@ import re
 import json
 
 ROOT_PATH = 'jsrs/media/'
+FILE_VARIANT = True
 
 # 発音評価02 is different
 # JP_EXPERIMENT_1: native speakers
 # SE Data/n... -> native speakers
 # SE Data/s... -> foreign speakers (students)
+# Pilot/ follows $reader-$sentence.mp3 pattern
 
 def audio_files(path):
     '''Generator returning full_path, basename, and extension of all audio files under given path.'''
     for root, dirs, files in os.walk(path, followlinks=True):
         for name in files:
-            (basename, extension) = os.path.splitext(name)
+            basename, extension = os.path.splitext(name)
             full_path = os.path.join(root, name)
             if re.match(r'\.(mp3|wav)', extension):
                 relpath = os.path.relpath(full_path, os.path.abspath(ROOT_PATH))
-                recording_set, reader, _ = Path(full_path).parts[-3:]
-                sentence = int(''.join(n for n in basename if n.isdigit()))
-                yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
+                if FILE_VARIANT:
+                    _, recording_set, _ = Path(full_path).parts[-3:]
+                    reader, sentence_string = basename.split('-')
+                    sentence = int(''.join(n for n in sentence_string if n.isdigit())) # remove non-digits
+                    yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
+                else:
+                    recording_set, reader, _ = Path(full_path).parts[-3:]
+                    sentence = int(''.join(n for n in basename if n.isdigit())) # remove non-digits
+                    yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
 
 
 def preprocess(root_path):
@@ -46,7 +54,7 @@ def preprocess(root_path):
             mp3_version = os.path.join(os.path.dirname(full_path), basename) + '.mp3'
             if not os.path.exists(mp3_version):
                 print('Transcoding {} to {}'.format(full_path, mp3_version))
-                subprocess.run(['ffmpeg', '-i', full_path, '-qscale:a', '2', mp3_version])
+                subprocess.run(['avconv', '-i', full_path, '-qscale:a', '2', mp3_version])
     for (full_path, _, extension, _, _, _, _) in audio_files(os.path.abspath(ROOT_PATH)):
         if extension == '.mp3':
             print('Normalizing {}'.format(full_path))
@@ -56,6 +64,7 @@ def preprocess(root_path):
 def generate_fixtures(root_path):
     '''Generates and writes fixtures to json file for later loading.'''
     #preprocess(root_path)
+    #print([a for a in audio_files(root_path)])
     with open('audio-files-fixtures.json', 'w') as f:
         f.write(json.dumps([{'model': 'audio.Audio',
                              'fields': {'path': relpath, 'group': recording_set, 'reader': '{}-{}'.format(recording_set, reader), 'sentence': sentence}} for (path, _, extension, relpath, recording_set, reader, sentence) in audio_files(root_path) if extension == '.mp3'], ensure_ascii=False))
