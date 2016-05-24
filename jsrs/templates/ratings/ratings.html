@@ -49,6 +49,14 @@
       </div>
     </div>
   </div>
+  {% if request.user.is_superuser %}
+  <div class="row">
+    <div class="content-rating col-md-12">
+      <h4>mdprefml results</h4>
+      <pre>{{ mdpref_results }}</pre>
+    </div>
+  </div>
+  {% endif %}
 {% else %}
   <p>本システムを利用するのにアカウントの登録が必要です。</p>
 {% endif %}

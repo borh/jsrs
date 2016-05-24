@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from jsrs.users.models import User
 from jsrs.audio.models import Audio
-from .r import mdprefmx
+from .r import mdprefml
 
 from django.utils.translation import ugettext_lazy as _
 BOOL_CHOICES = ((True, _('Yes')), (False, _('No')))
@@ -136,21 +136,28 @@ from itertools import chain
 def get_next_rating(user_id):
     # TODO use user_id to join with Users table
     # ratings = Ratings.objects.values()
+
     audio_files = get_unrated_pair()
+
+    mdpref_results = None
     if len(audio_files)==0:
-        ratings = get_all_ratings()
-        print('ratings = {}'.format(ratings))
-        f = [r[0] for r in ratings]
-        n = [r[1] for r in ratings]
-        ij = list(chain.from_iterable(r[2:4] for r in ratings))
-        print(ij)
-        subj = [r[4] for r in ratings]
-        # f = [] # TODO -> direct SQL query easier???
-        print(mdprefmx(f, n, ij, subj))
+        try:
+            ratings = get_all_ratings()
+            #print('ratings = {}'.format(ratings))
+            f = [r[0] for r in ratings]
+            n = [r[1] for r in ratings]
+            ij = list(chain.from_iterable(r[2:4] for r in ratings))
+            #print(ij)
+            subj = [r[4] for r in ratings]
+            # f = [] # TODO -> direct SQL query easier???
+            mdpref_results = mdprefml(f, n, ij, subj)
+        except Exception as e:
+            print(e)
+        audio_files = get_random_pair()
 
     a = Audio.objects.get(id=audio_files[0][0])
     b = Audio.objects.get(id=audio_files[0][1])
-    return (a, b)
+    return (a, b, mdpref_results)
 
 def ratings_done(user_id):
     return Ratings.objects.filter(user_id=user_id).count()
