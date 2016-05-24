@@ -47,5 +47,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('play-button').classList.toggle('hide');
       document.getElementById('rating').classList.toggle('hide');
     };
+
+    //window.setTimeout(function() {
+    if (document.querySelector('.autoplay')) {
+      console.log('Autoplaying audio...');
+      document.getElementById('play-button').click();
+    }
+    //}, 200);
   }
 });

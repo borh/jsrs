@@ -10,9 +10,12 @@
   <div class="row">
     <div class="col-md-12">
       {% if rated == 0 %}
+
       <p class="p-x-1">開始ボタンをクリックするとA並びにBの音声が流れてきます。より日本人らしく聞こえるほうを選んでください。再生回数は一回のみです。判定したら自動的に次の評価ペアに移ります。再生に問題がありましたら、上記「評価」ボタンをクリックしてください。</p>
       <hr class="m-y-2"/>
+
       {% else %}
+
       <p class="text-xs-center">
         <a data-toggle="collapse" href="#collapseExplanation" aria-expanded="false" aria-controls="collapseExplanation">
           説明を表示
@@ -26,12 +29,17 @@
 
       <progress class="progress progress-info" value="{{ rated_progress }}" max="100">{{ rated }}/{{ rated_goal }}</progress>
       <p class="text-xs-center"><span class="label label-default">{{ rated }}</span>ペア診断済み（ゴール： {{ rated_goal }}）</p>
+
       {% endif %}
     </div>
   </div>
   <div class="row">
     <div class="content-rating text-center text-xs-center center-block col-md-12">
+      {% if rated == 0 %}
       <button id="play-button" type="button" class="btn btn-primary btn-lg center-block text-center">ペア評価開始</button>
+      {% else %}
+      <button id="play-button" type="button" class="btn btn-primary btn-lg center-block text-center autoplay">ペア評価開始</button>
+      {% endif %}
 
       <div id="rating" class="hide center-block text-center">
         <form action="{% url 'ratings:ratings' %}" method="post">
