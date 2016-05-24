@@ -5,21 +5,46 @@
 
 "use strict";
 
+// TODO detect browsers
+
+var browserDetect = function() {
+  var ua = navigator.userAgent;
+  var detected;
+  if (/Mobile|mobile/i.test(ua) && /Chrome|iPad|iPod|iPhone/i.test(ua))
+    detected = 'mobile chrome';
+  else if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua))
+    detected = 'mobile';
+  else if (/Chrome/i.test(ua))
+    detected = 'chrome';
+  else
+    detected = 'other';
+  console.log('Detected browser ' + detected + ' based on UA: ' + ua);
+  return detected;
+}
+
 var switcharoo = function(e, dummyUrl) {
   var originalSrc = e.src;
   e.src = dummyUrl;
-  e.play();
-  e.src = originalSrc;
+  try {
+    e.play();
+    e.src = originalSrc;
+  }
+  catch (err) {
+    console.log('Ignoring playback error: ' + err.message);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  // Workaround for broken audio in mobile Chrome (https://bugs.chromium.org/p/chromium/issues/detail?id=178297)
-  if (document.getElementById('dummy')) {
-    var dummy_url = document.getElementById('dummy').src;
-    switcharoo(document.getElementById('a'), dummy_url);
-  }
+  var ua = browserDetect();
+  if (ua === 'mobile chrome') {
+    // Workaround for broken audio in mobile Chrome (https://bugs.chromium.org/p/chromium/issues/detail?id=178297)
+    if (document.getElementById('dummy')) {
+      var dummy_url = document.getElementById('dummy').src;
+      switcharoo(document.getElementById('a'), dummy_url);
+    }
   // End of workaround
+  }
 
   if (document.getElementById('play-button')) {
     document.getElementById('play-button').onclick = function() {
@@ -27,7 +52,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return;
       }
       document.getElementById('a').play();
-      switcharoo(document.getElementById('b'), dummy_url);
+      if (ua === 'mobile chrome')
+        switcharoo(document.getElementById('b'), dummy_url);
       // console.log(document.getElementById('a').currentTime);
       // document.getElementById('a').addEventlistener('loadedmetadata', function() {
       //   console.log(document.getElementById('a').duration);
@@ -35,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       document.getElementById('play-button').classList.toggle('active');
       document.getElementById('play-button').classList.toggle('disabled');
+      document.getElementById('play-button').disabled = true;
       document.getElementById('play-button').innerHTML = 'Ａを再生中';
     };
 
