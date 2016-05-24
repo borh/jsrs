@@ -56,17 +56,19 @@ class RaterDetailView(LoginRequiredMixin, DetailView):
 
 class RaterUpdateView(LoginRequiredMixin, UpdateView):
 
-    fields = ['age',
-              'gender',
-              'volunteer_experience_time',
-              'time_abroad',
-              'job',
-              'place_of_birth',
-              'language_use_information',
-              'dialect_used',
-              'best_foreign_language',
-              'usual_foreign_language_use',
-              'speaking_with_foreigners'
+    fields = [
+        'age',
+        'gender',
+        'volunteer_experience_time',
+        'time_abroad',
+        'job',
+        'place_of_birth',
+        'current_address',
+        'language_use_information',
+        'dialect_used',
+        'best_foreign_language',
+        'usual_foreign_language_use',
+        'speaking_with_foreigners'
     ]
 
     template_name = 'rater_update.html'
