@@ -5,8 +5,13 @@ from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
 
 from .models import User, Rater
+from .forms import RaterForm
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -81,4 +86,34 @@ class RaterUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         # Only get the Rater record for the user making the request
-        return Rater.objects.get(user_id=self.request.user.id)
+        try:
+            rater = Rater.objects.get(user_id=self.request.user.id)
+        except Rater.DoesNotExist:
+            #rater = Rater.objects.create(user_id=self.request.user.id)
+            rater = None
+        return rater
+
+@login_required
+def rater_survey(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = RaterForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            survey = Rater(user=request.user, **form.cleaned_data)
+            survey.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('ratings:ratings'))
+
+        # if a GET (or any other method) we'll create a blank form or one based on current data
+    else:
+        try:
+            form = RaterForm(Rater.objects.get(user_id=request.user.id))
+        except Rater.DoesNotExist:
+            form = RaterForm()
+
+    return render(request,
+                  'users/rater_survey.html',
+                  {'form': form})

@@ -47,4 +47,10 @@ urlpatterns = [
         view=views.RaterUpdateView.as_view(),
         name='rater_update'
     ),
+
+    url(
+        regex=r'^~rater_survey/$',
+        view=views.rater_survey,
+        name='rater_survey'
+    ),
 ]
