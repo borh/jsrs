@@ -41,14 +41,14 @@ class Rater(models.Model):
 
     # see: https://django-localflavor.readthedocs.org/en/latest/localflavor/jp/
     # https://github.com/yubinbango/yubinbango
-    JP_PREFECTURES = (('hokkaido', 'Hokkaido'), ('aomori', 'Aomori'), ('iwate', 'Iwate'), ('miyagi', 'Miyagi'), ('akita', 'Akita'), ('yamagata', 'Yamagata'), ('fukushima', 'Fukushima'), ('ibaraki', 'Ibaraki'), ('tochigi', 'Tochigi'), ('gunma', 'Gunma'), ('saitama', 'Saitama'), ('chiba', 'Chiba'), ('tokyo', 'Tokyo'), ('kanagawa', 'Kanagawa'), ('niigata', 'Niigata'), ('toyama', 'Toyama'), ('ishikawa', 'Ishikawa'), ('fukui', 'Fukui'), ('yamanashi', 'Yamanashi'), ('nagano', 'Nagano'), ('gifu', 'Gifu'), ('shizuoka', 'Shizuoka'), ('aichi', 'Aichi'), ('mie', 'Mie'), ('shiga', 'Shiga'), ('kyoto', 'Kyoto'), ('osaka', 'Osaka'), ('hyogo', 'Hyogo'), ('nara', 'Nara'), ('wakayama', 'Wakayama'), ('tottori', 'Tottori'), ('shimane', 'Shimane'), ('okayama', 'Okayama'), ('hiroshima', 'Hiroshima'), ('yamaguchi', 'Yamaguchi'), ('tokushima', 'Tokushima'), ('kagawa', 'Kagawa'), ('ehime', 'Ehime'), ('kochi', 'Kochi'), ('fukuoka', 'Fukuoka'), ('saga', 'Saga'), ('nagasaki', 'Nagasaki'), ('kumamoto', 'Kumamoto'), ('oita', 'Oita'), ('miyazaki', 'Miyazaki'), ('kagoshima', 'Kagoshima'), ('okinawa', 'Okinawa'), ('海外', '海外'))
+    JP_PREFECTURES = [(prefecture, prefecture) for prefecture in ('北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県', '海外')]
     place_of_birth  = models.CharField(verbose_name='出身地', max_length=255, choices=JP_PREFECTURES)
     current_address = models.CharField(verbose_name='現住所', max_length=255, choices=JP_PREFECTURES)
-    language_use_information = models.CharField(verbose_name='標準語・方言使用', max_length=255, choices=(('標準語と方言をどちらもよく使う', '標準語と方言をどちらもよく使う'), ('普段の生活では方言、公的な場では標準語を使用', '普段の生活では方言、公的な場では標準語を使用'), ('常時方言を使用', '常時方言を使用')))
+    language_use_information = models.CharField(verbose_name='標準語・方言使用', max_length=255, choices=(('標準語と方言をどちらもよく使う', '標準語と方言をどちらもよく使う'), ('普段の生活では方言、公的な場では標準語を使用', '普段の生活では方言、公的な場では標準語を使用'), ('常時標準語を使用', '常時標準語を使用'), ('常時方言を使用', '常時方言を使用')))
     dialect_used = models.CharField(verbose_name='使用している方言', max_length=255) # TODO
     best_foreign_language = models.CharField(verbose_name='一番よく話せる外国語', max_length=255, choices=(('外国語で日常会話が出来る', '外国語で日常会話が出来る'), ('たどたどしいが意思の疎通が出来る', 'たどたどしいが意思の疎通が出来る'), ('基本的に話せない', '基本的に話せない')))
     usual_foreign_language_use = models.CharField(verbose_name='普段の生活での外国語使用', max_length=255, choices=(('日本語と同程度，あるいはそれ以上に、外国語を話す', '日本語と同程度，あるいはそれ以上に、外国語を話す'), ('仕事など特定の場面で話す', '仕事など特定の場面で話す'), ('外国語を話すことは全くないか，殆ど無い', '外国語を話すことは全くないか，殆ど無い')))
-    speaking_with_foreigners = models.CharField(verbose_name='外国人と日本語で話す機会', max_length=255, choices=(('日常的にあるが、よくある', '日常的にあるが、よくある'), ('日常的ではないが、たまに話すことはある', '日常的ではないが、たまに話すことはある'), ('殆どないか、全くない', '殆どないか、全くない')))
+    speaking_with_foreigners = models.CharField(verbose_name='外国人と日本語で話す機会', max_length=255, choices=(('日常的にあるか、よくある', '日常的にあるか、よくある'), ('日常的ではないが、たまに話すことはある', '日常的ではないが、たまに話すことはある'), ('殆どないか、全くない', '殆どないか、全くない')))
 
     def __str__(self):
         return self.user.__str__()
