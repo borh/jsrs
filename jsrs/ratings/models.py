@@ -49,7 +49,8 @@ FROM
     GROUP BY audio_a_id, audio_b_id, user_id
   ) AS rl
 WHERE
-  r.a_gt_b=TRUE AND
+--  r.user_id NOT IN (SELECT id FROM users_user WHERE is_superuser IS TRUE) AND
+  r.a_gt_b IS TRUE AND
   r.user_id=rl.subject AND
   r.audio_a_id=rl.audio_a_id AND
   r.audio_b_id=rl.audio_b_id
@@ -99,14 +100,43 @@ WHERE
   r.audio_a_id IS NULL OR
   r.audio_b_id IS NULL
 GROUP BY
-  a1.sentence,
-  a1.group,
-  a2.group,
   a1.id,
   a2.id
 ORDER BY
-  a1.sentence,
-  a1.id
+  count(a1.id) ASC,
+  count(a2.id) ASC,
+  a1.id,
+  a2.id
+LIMIT 1''')
+    return cursor.fetchall()
+
+def get_random_pair():
+    '''評価回数が少ない任意２名の２センテンス（同じ文）を選ぶ。'''
+    cursor = connection.cursor()
+    cursor.execute('''
+SELECT
+  a1.id,
+  a2.id
+FROM
+  ratings_ratings AS r
+RIGHT JOIN
+  audio_audio AS a1
+  ON
+    r.audio_a_id=a1.id OR
+    r.audio_b_id=a1.id
+JOIN -- get the pair --
+  audio_audio AS a2
+  ON
+    a1.id!=a2.id AND
+    a1.sentence=a2.sentence
+GROUP BY
+  a1.id,
+  a2.id
+ORDER BY
+  count(r.audio_a_id) ASC,
+  count(r.audio_b_id) ASC,
+  a1.id,
+  a2.id
 LIMIT 1''')
     return cursor.fetchall()
 
