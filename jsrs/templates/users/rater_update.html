@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}アンケート：{{ user.username }}{% endblock %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+  <h1>{{ user.username }}さんのアンケート情報</h1>
+
+  <form method="POST" action="{% url 'users:rater_update' %}" class="uniForm">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" name="action" value="設定"/>
+  </form>
+{% endif %}
+
+{% endblock content %}
