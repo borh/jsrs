@@ -17,7 +17,7 @@ def update_site_forward(apps, schema_editor):
     Site.objects.update_or_create(
         id=settings.SITE_ID,
         defaults={
-            "domain": "cuckoo.ryu.titech.ac.jp",
+            "domain": "cuckoo.js.ila.titech.ac.jp",
             "name": "jsrs"
         }
     )
