@@ -182,7 +182,7 @@ def get_next_rating(user_id):
             # f = [] # TODO -> direct SQL query easier???
             mdpref_results = mdprefml(f, n, ij, subj)
         except Exception as e:
-            print(e)
+            print('Exception occured while running mdprefml:', e)
         audio_files = get_random_pair()
 
     a = Audio.objects.get(id=audio_files[0][0])
