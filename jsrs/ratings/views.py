@@ -19,7 +19,6 @@ from ..users.models import Rater
 def ratings_page(request):
     try:
         rater = Rater.objects.get(user_id=request.user.id)
-        print(rater)
     except Rater.DoesNotExist:
         return HttpResponseRedirect(reverse('users:rater_survey'))
     #if not request.user.is_authenticated(): return render(request, 'ratings/ratings.html')
