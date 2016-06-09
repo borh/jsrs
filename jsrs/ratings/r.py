@@ -39,5 +39,5 @@ def mdprefml(f, n, ij, subj):
     The k-th elements of the quartet indicate that subj[k] preferred stimulus ij[k,1] over ij[k,2] f[k] times when exposed to the pair n[k] times.
     The paired comparison for each subject does no have to be complete.'''
     #print(ro.r.matrix(ro.IntVector(ij), ncol=2, byrow=True))
-    r = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj))
+    r = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=-1)
     return r
