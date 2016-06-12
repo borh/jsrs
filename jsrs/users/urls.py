@@ -41,12 +41,12 @@ urlpatterns = [
         name='rater_detail'
     ),
 
-    # URL pattern for the RaterUpdateView
-    url(
-        regex=r'^~rater_update/$',
-        view=views.RaterUpdateView.as_view(),
-        name='rater_update'
-    ),
+    # # URL pattern for the RaterUpdateView
+    # url(
+    #     regex=r'^~rater_update/$',
+    #     view=views.RaterUpdateView.as_view(),
+    #     name='rater_update'
+    # ),
 
     url(
         regex=r'^~rater_survey/$',

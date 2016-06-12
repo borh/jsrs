@@ -9,7 +9,7 @@
 {% if request.user.is_authenticated %}
   <h1>{{ user.username }}さんのアンケート情報</h1>
 
-  <form method="POST" action="{% url 'users:rater_update' %}" class="uniForm">
+  <form method="POST" action="{% url 'users:rater_survey' %}" class="uniForm">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" name="action" value="設定"/>

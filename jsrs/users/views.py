@@ -59,39 +59,39 @@ class RaterDetailView(LoginRequiredMixin, DetailView):
     slug_field = "user"
     slug_url_kwarg = "user"
 
-class RaterUpdateView(LoginRequiredMixin, UpdateView):
-
-    fields = [
-        'age',
-        'gender',
-        'volunteer_experience_time',
-        'time_abroad',
-        'job',
-        'place_of_birth',
-        'current_address',
-        'language_use_information',
-        'dialect_used',
-        'best_foreign_language',
-        'usual_foreign_language_use',
-        'speaking_with_foreigners'
-    ]
-
-    template_name = 'rater_update.html'
-
-    model = Rater
-
-    # send the user to the ratings page after a successful update
-    def get_success_url(self):
-        return reverse("ratings:ratings")
-
-    def get_object(self):
-        # Only get the Rater record for the user making the request
-        try:
-            rater = Rater.objects.get(user_id=self.request.user.id)
-        except Rater.DoesNotExist:
-            #rater = Rater.objects.create(user_id=self.request.user.id)
-            rater = None
-        return rater
+# class RaterUpdateView(LoginRequiredMixin, UpdateView):
+#
+#     fields = [
+#         'age',
+#         'gender',
+#         'volunteer_experience_time',
+#         'time_abroad',
+#         'job',
+#         'place_of_birth',
+#         'current_address',
+#         'language_use_information',
+#         'dialect_used',
+#         'best_foreign_language',
+#         'usual_foreign_language_use',
+#         'speaking_with_foreigners'
+#     ]
+#
+#     template_name = 'rater_update.html'
+#
+#     model = Rater
+#
+#     # send the user to the ratings page after a successful update
+#     def get_success_url(self):
+#         return reverse("ratings:ratings")
+#
+#     def get_object(self):
+#         # Only get the Rater record for the user making the request
+#         try:
+#             rater = Rater.objects.get(user_id=self.request.user.id)
+#         except Rater.DoesNotExist:
+#             #rater = Rater.objects.create(user_id=self.request.user.id)
+#             rater = None
+#         return rater
 
 @login_required
 def rater_survey(request):
