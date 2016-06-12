@@ -163,6 +163,7 @@ LIMIT 1''')
 ## LIMIT 2
 
 from itertools import chain
+import random
 def get_next_rating(user_id):
     # TODO use user_id to join with Users table
     # ratings = Ratings.objects.values()
@@ -185,9 +186,14 @@ def get_next_rating(user_id):
             print('Exception occured while running mdprefml:', e)
         audio_files = get_random_pair()
 
-    a = Audio.objects.get(id=audio_files[0][0])
-    b = Audio.objects.get(id=audio_files[0][1])
-    return (a, b, mdpref_results)
+    ab = [
+        Audio.objects.get(id=audio_files[0][0]),
+        Audio.objects.get(id=audio_files[0][1])
+    ]
+    random.shuffle(ab)
+    a, b = ab
+
+    return (a, b, (mdpref_results, mdpref_svg))
 
 def ratings_done(user_id):
     return Ratings.objects.filter(user_id=user_id).count()
