@@ -1,11 +1,78 @@
-// TODO: http://mae.chab.in/archives/2307
+'use strict';
 
-// TODO: How long a gap between playback of sound files (if we decide to play them back-to-back)?
-// TODO: Play back A/B tone before each file.
+var display;
 
-"use strict";
+function init() {
+  display = document.getElementById('play-button');
+  display.addEventListener('click', handleClick, false);
+}
 
-// TODO detect browsers
+function handleClick(event) {
+  display.removeEventListener('click', handleClick, false);
+  var myApp = new myNameSpace.MyApp();
+}
+
+this.myNameSpace = this.myNameSpace || {};
+(function() {
+  function MyApp() {
+    this.init();
+  }
+
+  MyApp.prototype = {
+    displayMessage: null,
+    inited: false,
+
+    init: function() {
+      this.displayMessage = document.getElementById('play-button');
+
+      if (!createjs.Sound.initializeDefaultPlugins()) {return;}
+
+      var audioPath = '';
+      var sounds = [
+        {id: 'a', src: document.getElementById('a').src},
+        {id: 'b', src: document.getElementById('b').src}
+      ];
+
+      this.displayMessage.innerHTML = 'ロード中';
+      createjs.Sound.alternateExtensions = ['mp3'];
+      var loadProxy = createjs.proxy(this.handleLoad, this);
+      createjs.Sound.addEventListener('fileload', loadProxy);
+      createjs.Sound.registerSounds(sounds, audioPath);
+    },
+
+    handleLoad: function(event) {
+      if (this.inited) {return;}
+      var a = document.getElementById('a');
+      var aSound = createjs.Sound.play(a.src);
+      this.displayMessage.classList.toggle('active');
+      this.displayMessage.classList.toggle('disabled');
+      this.displayMessage.disabled = true;
+      this.displayMessage.innerHTML = 'Ａを再生中';
+
+      aSound.on('complete', function() {
+        var b = document.getElementById('b');
+        var bSound = createjs.Sound.play(b.src);
+        this.displayMessage.innerHTML = 'Ｂを再生中';
+        bSound.on('complete', function() {
+          this.displayMessage.classList.toggle('hide');
+          document.getElementById('rating').classList.toggle('hide');
+        }, this);
+      }, this);
+      this.inited = true;
+    }
+  }
+
+  myNameSpace.MyApp = MyApp;
+}());
+
+document.addEventListener('DOMContentLoaded', function(event) {
+  init();
+  var ua = browserDetect();
+  if (document.querySelector('.autoplay') && !/mobile/i.test(ua)) {
+    console.log('Autoplaying audio...');
+    document.getElementById('play-button').click();
+  }
+});
 
 var browserDetect = function() {
   var ua = navigator.userAgent;
@@ -21,84 +88,3 @@ var browserDetect = function() {
   console.log('Detected browser ' + detected + ' based on UA: ' + ua);
   return detected;
 }
-
-var switcharoo = function(e, dummyUrl) {
-  var originalSrc = e.src;
-  e.src = dummyUrl;
-  try {
-    e.play();
-    e.src = originalSrc;
-  }
-  catch (err) {
-    console.log('Ignoring playback error: ' + err.message);
-  }
-}
-
-var play_audio = function(ua, dummy_url, switched) {
-  if (!switched && /mobile/i.test(ua)) {
-    // Workaround for broken audio in mobile Chrome (https://bugs.chromium.org/p/chromium/issues/detail?id=178297)
-    if (document.getElementById('dummy')) {
-      switcharoo(document.getElementById('a'), dummy_url);
-      //switcharoo(document.getElementById('b'), dummy_url);
-    }
-  }
-
-  document.getElementById('play-button').onclick = function() {
-    if (document.getElementById('play-button').classList.contains('active')) {
-      return;
-    }
-    document.getElementById('a').play();
-    // console.log(document.getElementById('a').currentTime);
-    // document.getElementById('a').addEventlistener('loadedmetadata', function() {
-    //   console.log(document.getElementById('a').duration);
-    // });
-
-    document.getElementById('play-button').classList.toggle('active');
-    document.getElementById('play-button').classList.toggle('disabled');
-    document.getElementById('play-button').disabled = true;
-    document.getElementById('play-button').innerHTML = 'Ａを再生中';
-  };
-
-  document.getElementById('a').onended = function(e) {
-    if (!switched && /mobile/i.test(ua))
-      switcharoo(document.getElementById('b'), dummy_url);
-
-    document.getElementById('b').play();
-    document.getElementById('play-button').innerHTML = 'Ｂを再生中';
-  };
-
-  document.getElementById('b').onended = function(e) {
-    document.getElementById('play-button').classList.toggle('hide');
-    document.getElementById('rating').classList.toggle('hide');
-  };
-}
-
-document.addEventListener("DOMContentLoaded", function(event) {
-
-  var ua = browserDetect();
-  var dummy_url = document.getElementById('dummy').src;
-  var switched = false;
-
-  if (document.getElementById('play-button')) {
-    play_audio(ua, dummy_url, switched);
-
-  //window.setTimeout(function() {
-  // NOTE: Cannot autoplay on mobile.
-  if (document.querySelector('.autoplay') && !/mobile/i.test(ua)) {
-    console.log('Autoplaying audio...');
-    document.getElementById('play-button').click();
-  } else if (document.querySelector('.autoplay') && /mobile/i.test(ua)) {
-    console.log('Autoplaying audio on mobile using touchend...');
-    addEventListener('touchend', function (e) {
-      console.log('.');
-      play_audio(ua, dummy_url, switched);
-      //soundHandle.src = 'audio.mp3';
-      //soundHandle.loop = true;
-      //soundHandle.play();
-      //soundHandle.pause();
-    });
-  }
-
-  //}, 200);
-  }
-});
