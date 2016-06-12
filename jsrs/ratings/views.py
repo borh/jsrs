@@ -23,7 +23,7 @@ def ratings_page(request):
         return HttpResponseRedirect(reverse('users:rater_survey'))
     #if not request.user.is_authenticated(): return render(request, 'ratings/ratings.html')
 
-    sound_file_a, sound_file_b, mdpref_results = get_next_rating(request.user.id)
+    sound_file_a, sound_file_b, (mdpref_results, mdpref_svg) = get_next_rating(request.user.id)
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -55,6 +55,7 @@ def ratings_page(request):
                   {'form': form,
                    'user_id': request.user.id,
                    'mdpref_results': mdpref_results,
+                   'mdpref_svg': mdpref_svg,
                    'rated': rated,
                    'rated_progress': round(rated / rated_goal * 100),
                    'rated_goal': rated_goal,

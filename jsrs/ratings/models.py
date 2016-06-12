@@ -171,6 +171,7 @@ def get_next_rating(user_id):
     audio_files = get_unrated_pair()
 
     mdpref_results = None
+    mdpref_svg = None
     if len(audio_files)==0:
         try:
             ratings = get_all_ratings()
@@ -181,7 +182,7 @@ def get_next_rating(user_id):
             #print(ij)
             subj = [r[4] for r in ratings]
             # f = [] # TODO -> direct SQL query easier???
-            mdpref_results = mdprefml(f, n, ij, subj)
+            mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj)
         except Exception as e:
             print('Exception occured while running mdprefml:', e)
         audio_files = get_random_pair()

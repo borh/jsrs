@@ -27,6 +27,8 @@ def timeit(method):
 
     return timed
 
+import datetime
+
 @timeit
 def mdprefml(f, n, ij, subj):
     '''Parameters:
@@ -39,5 +41,13 @@ def mdprefml(f, n, ij, subj):
     The k-th elements of the quartet indicate that subj[k] preferred stimulus ij[k,1] over ij[k,2] f[k] times when exposed to the pair n[k] times.
     The paired comparison for each subject does no have to be complete.'''
     #print(ro.r.matrix(ro.IntVector(ij), ncol=2, byrow=True))
-    r = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=-1)
-    return r
+
+    timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H%M%S')
+    svg_filename = 'mdprefml-{}.svg'.format(timestamp)
+    r('svg("{}", width=7, height=7)'.format(svg_filename))
+
+    r = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
+
+    r('dev.off()')
+
+    return (r, svg_filename)
