@@ -193,7 +193,11 @@ def get_next_rating(user_id):
     random.shuffle(ab)
     a, b = ab
 
-    sentence = Sentence.objects.get(sentence=a_model.id)
+    try:
+        sentence = Sentence.objects.get(sentence=a_model.id)
+    except Exception as e:
+        print('Exception getting sentence id="{}"'.format(a_model.id))
+        sentence = Sentence(id=a_model.id, text='')
 
     return (a, b, sentence.text, (mdpref_results, mdpref_svg))
 
