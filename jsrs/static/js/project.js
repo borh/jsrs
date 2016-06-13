@@ -56,6 +56,13 @@ this.myNameSpace = this.myNameSpace || {};
         bSound.on('complete', function() {
           this.displayMessage.classList.toggle('hide');
           document.getElementById('rating').classList.toggle('hide');
+          window.addEventListener('keydown', function(e) {
+            var code = e.keyCode;
+            if (code == 65) // a
+              document.getElementById('id_a_gt_b_1').click();
+            else if (code == 66) //b
+              document.getElementById('id_a_gt_b_2').click();
+          }, false);
         }, this);
       }, this);
       this.inited = true;
