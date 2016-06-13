@@ -12,6 +12,7 @@ class Audio(models.Model):
     path = models.CharField(max_length=255, unique=True)
     group = models.CharField(max_length=255, db_index=True)
     reader = models.CharField(max_length=255, db_index=True)
+    native_speaker = models.BooleanField(db_index=True)
     sentence = models.IntegerField(db_index=True) # Currently 1..40
     rating_set = models.CharField(max_length=255, blank=True, null=True, db_index=True)
     # length = models.IntegerField() # TODO
