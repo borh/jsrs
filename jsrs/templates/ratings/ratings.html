@@ -27,8 +27,8 @@
         </div>
       </div>
 
-      <progress class="progress progress-info" value="{{ rated_progress }}" max="100">{{ rated }}/{{ rated_goal }}</progress>
-      <p class="text-xs-center"><span class="label label-default">{{ rated }}</span>ペア診断済み（ゴール： {{ rated_goal }}）</p>
+      <!--<progress class="progress progress-info" value="{{ rated_progress }}" max="100">{{ rated }}/{{ rated_goal }}</progress>-->
+      <p class="text-xs-center"><span class="label label-default">{{ rated }}</span>ペア診断済み</p>
 
       {% endif %}
     </div>
@@ -51,7 +51,7 @@
           {{ form.non_field_errors }}
           <div class="fieldWrapper center-block text-center">
             {{ form.a_gt_b.errors }}
-            <label for="{{ form.a_gt_b.id_for_label }}">より日本人らしく聞こえるほうを選んで下さい</label><br />
+            <label for="{{ form.a_gt_b.id_for_label }}">より日本語としてきれいな発音だと思う方を選んで下さい。</label><br />
             <div class="btn-group btn-group-lg center-block text-center" role="group" aria-label="Rating">
               <button id="id_a_gt_b_1" class="btn btn-secondary" name="a_gt_b" type="submit" value="True">Ａが良い</button>
               <button id="id_a_gt_b_2" class="btn btn-secondary" name="a_gt_b" type="submit" value="False">Ｂが良い</button>
