@@ -95,6 +95,8 @@ JOIN -- get the pair --
   audio_audio AS a2
   ON
     a1.id!=a2.id AND
+    NOT (a1.native_speaker IS TRUE AND
+         a2.native_speaker IS TRUE) AND
     a1.sentence=a2.sentence
 WHERE
   r.audio_a_id IS NULL OR
