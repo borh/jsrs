@@ -194,9 +194,9 @@ def get_next_rating(user_id):
     a, b = ab
 
     try:
-        sentence = Sentence.objects.get(sentence=a_model.id)
+        sentence = Sentence.objects.get(sentence=a_model.sentence)
     except Exception as e:
-        print('Exception getting sentence id="{}"'.format(a_model.id))
+        print('Exception getting sentence id="{}"'.format(a_model.sentence))
         sentence = Sentence(sentence=a_model.id, text='')
 
     return (a, b, sentence.text, (mdpref_results, mdpref_svg))
