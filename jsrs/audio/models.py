@@ -28,3 +28,7 @@ class Audio(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse('audio:play', kwargs={'sentence': self.sentence, 'reader': self.reader})
+
+class Sentence(models.Model):
+    sentence = models.IntegerField(db_index=True)
+    text = models.CharField(max_length=255, unique=True, db_index=True)

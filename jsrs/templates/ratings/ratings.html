@@ -41,6 +41,10 @@
       <button id="play-button" type="button" class="btn btn-primary btn-lg center-block text-center autoplay">ペア評価開始</button>
       {% endif %}
 
+      <blockquote class="blockquote">
+        <p class="text-primary">{{ sentence_text }}</p>
+      </blockquote>
+
       <div id="rating" class="hide center-block text-center">
         <form action="{% url 'ratings:ratings' %}" method="post">
           {% csrf_token %}

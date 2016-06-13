@@ -7,7 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from jsrs.users.models import User
-from jsrs.audio.models import Audio
+from jsrs.audio.models import Audio, Sentence
 from .r import mdprefml
 
 from django.utils.translation import ugettext_lazy as _
@@ -187,14 +187,15 @@ def get_next_rating(user_id):
             print('Exception occured while running mdprefml:', e)
         audio_files = get_random_pair()
 
-    ab = [
-        Audio.objects.get(id=audio_files[0][0]),
-        Audio.objects.get(id=audio_files[0][1])
-    ]
+    a_model = Audio.objects.get(id=audio_files[0][0])
+    b_model = Audio.objects.get(id=audio_files[0][1])
+    ab = [a_model, b_model]
     random.shuffle(ab)
     a, b = ab
 
-    return (a, b, (mdpref_results, mdpref_svg))
+    sentence = Sentence.objects.get(sentence=a_model.id)
+
+    return (a, b, sentence.text, (mdpref_results, mdpref_svg))
 
 def ratings_done(user_id):
     return Ratings.objects.filter(user_id=user_id).count()
