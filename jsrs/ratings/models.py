@@ -165,6 +165,23 @@ LIMIT 1''')
 ## LIMIT 2
 
 from itertools import chain
+def get_mdpref_results():
+    mdpref_results = None
+    mdpref_svg = None
+    try:
+        ratings = get_all_ratings()
+        #print('ratings = {}'.format(ratings))
+        f = [r[0] for r in ratings]
+        n = [r[1] for r in ratings]
+        ij = list(chain.from_iterable(r[2:4] for r in ratings))
+        #print(ij)
+        subj = [r[4] for r in ratings]
+        # f = [] # TODO -> direct SQL query easier???
+        mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj)
+    except Exception as e:
+        print('Exception occured while running mdprefml:', e)
+    return (mdpref_results, mdpref_svg)
+
 import random
 def get_next_rating(user_id):
     # TODO use user_id to join with Users table
@@ -175,18 +192,9 @@ def get_next_rating(user_id):
     mdpref_results = None
     mdpref_svg = None
     if len(audio_files)==0:
-        try:
-            ratings = get_all_ratings()
-            #print('ratings = {}'.format(ratings))
-            f = [r[0] for r in ratings]
-            n = [r[1] for r in ratings]
-            ij = list(chain.from_iterable(r[2:4] for r in ratings))
-            #print(ij)
-            subj = [r[4] for r in ratings]
-            # f = [] # TODO -> direct SQL query easier???
-            mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj)
-        except Exception as e:
-            print('Exception occured while running mdprefml:', e)
+
+        # mdpref_results, mdpref_svg = get_mdpref_results()
+
         audio_files = get_random_pair()
 
     a_model = Audio.objects.get(id=audio_files[0][0])
