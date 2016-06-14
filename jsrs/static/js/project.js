@@ -41,28 +41,27 @@ this.myNameSpace = this.myNameSpace || {};
     },
 
     handleLoad: function(event) {
-      if (this.inited) {return;}
-      var a = document.getElementById('a');
-      var aSound = createjs.Sound.play(a.src);
+      if (this.inited) { return; }
+
+      var aSound = createjs.Sound.play('a');
       this.displayMessage.classList.toggle('active');
       this.displayMessage.classList.toggle('disabled');
       this.displayMessage.disabled = true;
       this.displayMessage.innerHTML = 'Ａを再生中';
 
       aSound.on('complete', function() {
-        var b = document.getElementById('b');
-        var bSound = createjs.Sound.play(b.src);
+        var bSound = createjs.Sound.play('b');
         this.displayMessage.innerHTML = 'Ｂを再生中';
         bSound.on('complete', function() {
           this.displayMessage.classList.toggle('hide');
           document.getElementById('rating').classList.toggle('hide');
           window.addEventListener('keydown', function(e) {
             var code = e.keyCode;
-            if (code == 65) // a
+            if      (code == 65) // a
               document.getElementById('id_a_gt_b_1').click();
-            else if (code == 66) //b
+            else if (code == 66) // b
               document.getElementById('id_a_gt_b_2').click();
-            else if (code == 32) //space
+            else if (code == 32) // <space>
               document.getElementById('play-button').click();
           }, false);
         }, this);
