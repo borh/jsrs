@@ -62,6 +62,8 @@ this.myNameSpace = this.myNameSpace || {};
               document.getElementById('id_a_gt_b_1').click();
             else if (code == 66) //b
               document.getElementById('id_a_gt_b_2').click();
+            else if (code == 32) //space
+              document.getElementById('play-button').click();
           }, false);
         }, this);
       }, this);
