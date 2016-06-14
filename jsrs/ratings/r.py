@@ -46,8 +46,8 @@ def mdprefml(f, n, ij, subj):
     svg_filename = 'mdprefml-{}.svg'.format(timestamp)
     r('svg("{}", width=7, height=7)'.format(svg_filename))
 
-    r = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
+    result = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
 
     r('dev.off()')
 
-    return (r, svg_filename)
+    return (result, svg_filename)
