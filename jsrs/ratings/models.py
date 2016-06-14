@@ -191,7 +191,7 @@ def get_next_rating(user_id):
 
     mdpref_results = None
     mdpref_svg = None
-    if len(audio_files)==0:
+    if len(audio_files) == 0:
 
         # mdpref_results, mdpref_svg = get_mdpref_results()
 
