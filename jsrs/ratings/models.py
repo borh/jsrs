@@ -116,34 +116,36 @@ def get_random_pair():
     '''評価回数が少ない任意２名の２センテンス（同じ文）を選ぶ。'''
     cursor = connection.cursor()
     cursor.execute('''
-SELECT
-  a1.id,
-  a2.id
-FROM
-  ratings_ratings AS r
-RIGHT JOIN
-  audio_audio AS a1
-  ON
-    r.audio_a_id=a1.id OR
-    r.audio_b_id=a1.id
-JOIN -- get the pair --
-  audio_audio AS a2
-  ON
-    NOT (a1.native_speaker IS TRUE AND
-         a2.native_speaker IS TRUE) AND
-    a1.id!=a2.id AND
-    a1.sentence=a2.sentence
-GROUP BY
-  a1.id,
-  a2.id
-ORDER BY
-  count(r.audio_a_id) ASC,
-  count(r.audio_b_id) ASC,
-  a1.id,
-  a2.id
+WITH pairs AS (
+  SELECT
+    a1.id AS a,
+    a2.id AS b,
+    count(r.audio_a_id) + count(r.audio_b_id) AS all_count
+  FROM
+    ratings_ratings AS r
+  RIGHT JOIN
+    audio_audio AS a1
+    ON
+      r.audio_a_id=a1.id OR
+      r.audio_b_id=a1.id
+  JOIN
+    audio_audio AS a2
+    ON
+      NOT (a1.native_speaker IS TRUE AND
+           a2.native_speaker IS TRUE) AND
+      a1.id!=a2.id AND
+      a1.sentence=a2.sentence
+  GROUP BY
+    a1.id,
+    a2.id
+  ORDER BY
+    all_count ASC)
+SELECT a, b
+FROM pairs
+WHERE all_count=(SELECT min(all_count) FROM pairs)
+ORDER BY random()
 LIMIT 1''')
     return cursor.fetchall()
-
 
 ## SELECT
 ##   a.id
