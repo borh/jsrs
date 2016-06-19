@@ -11,6 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from __future__ import unicode_literals
+
 import os
 import sys
 
@@ -41,8 +43,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'jsrs'
-copyright = u"2016, Bor Hodošček"
+project = 'jsrs'
+copyright = """2016, Bor Hodoscek"""
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -186,8 +188,8 @@ latex_elements = {
 latex_documents = [
     ('index',
      'jsrs.tex',
-     u'jsrs Documentation',
-     u"Bor Hodošček", 'manual'),
+     'jsrs Documentation',
+     """Bor Hodoscek""", 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -216,8 +218,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'jsrs', u'jsrs Documentation',
-     [u"Bor Hodošček"], 1)
+    ('index', 'jsrs', 'jsrs Documentation',
+     ["""Bor Hodoscek"""], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -230,9 +232,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'jsrs', u'jsrs Documentation',
-     u"Bor Hodošček", 'jsrs',
-     'Japanese Speech Rating System', 'Miscellaneous'),
+    ('index', 'jsrs', 'jsrs Documentation',
+     """Bor Hodoscek""", 'jsrs',
+     """Japanese Speech Rating System""", 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

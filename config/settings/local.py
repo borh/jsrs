@@ -9,6 +9,8 @@ Local settings
 '''
 
 from .common import *  # noqa
+import socket
+import os
 
 # DEBUG
 # ------------------------------------------------------------------------------
@@ -23,10 +25,13 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default='h8d_3pn^zv*8c*1m27p_ifr16l9ttz!@4
 
 # Mail settings
 # ------------------------------------------------------------------------------
-EMAIL_HOST = 'localhost'
+
 EMAIL_PORT = 1025
+
+EMAIL_HOST = 'localhost'
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
+
 
 # CACHING
 # ------------------------------------------------------------------------------
@@ -42,7 +47,11 @@ CACHES = {
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 INSTALLED_APPS += ('debug_toolbar', )
 
-INTERNAL_IPS = ('127.0.0.1', '10.0.2.2',)
+INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
+# tricks to have debug toolbar when developing with docker
+if os.environ.get('USE_DOCKER') == 'yes':
+    ip = socket.gethostbyname(socket.gethostname())
+    INTERNAL_IPS += [ip[:-1]+"1"]
 
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [
