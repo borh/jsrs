@@ -49,7 +49,6 @@ FROM
     GROUP BY audio_a_id, audio_b_id, user_id
   ) AS rl
 WHERE
---  r.user_id NOT IN (SELECT id FROM users_user WHERE is_superuser IS TRUE) AND
   r.a_gt_b IS TRUE AND
   r.user_id=rl.subject AND
   r.audio_a_id=rl.audio_a_id AND
