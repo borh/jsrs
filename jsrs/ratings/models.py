@@ -64,6 +64,71 @@ ORDER BY
   rl.audio_b_id''')
     return cursor.fetchall()
 
+def get_all_ratings_summary():
+    cursor = connection.cursor()
+    cursor.execute('''
+WITH reverse_duplicate_pairs AS (
+  SELECT DISTINCT
+    audio_b_id AS a,
+    audio_a_id AS b
+  FROM
+    ratings_ratings
+  WHERE
+    (audio_a_id, audio_b_id) IN (SELECT audio_b_id, audio_a_id FROM ratings_ratings)
+  GROUP BY
+    audio_a_id,
+    audio_b_id
+)
+SELECT
+  rl.n,
+  COUNT(r.a_gt_b) + (SELECT count(*) FROM ratings_ratings AS r_gt WHERE r.audio_a_id=r_gt.audio_b_id AND r.audio_b_id=r_gt.audio_a_id AND r_gt.a_gt_b IS FALSE) AS f,
+  regexp_replace(a.path, '.+([ns])\d(\d\d)/.(\d\d?).+', '\1\2_\3') AS audio_a,
+  regexp_replace(b.path, '.+([ns])\d(\d\d)/.(\d\d?).+', '\1\2_\3') AS audio_b,
+  a.id AS a_id,
+  b.id AS b_id,
+  rl.subject
+FROM
+  ratings_ratings AS r,
+  LATERAL (
+    SELECT
+      r_l.user_id AS subject,
+      count(r_l.a_gt_b) + (SELECT count(*) FROM ratings_ratings AS r_c WHERE r_c.audio_b_id=r.audio_a_id AND r_c.audio_a_id=r.audio_b_id) AS n,
+      r_l.audio_a_id,
+      r_l.audio_b_id
+    FROM ratings_ratings AS r_l
+    WHERE (r_l.audio_a_id, r_l.audio_b_id) NOT IN (SELECT * FROM reverse_duplicate_pairs)
+    GROUP BY r_l.audio_a_id, r_l.audio_b_id, r_l.user_id ORDER BY n DESC
+  ) AS rl,
+  audio_audio AS a,
+  audio_audio AS b
+WHERE
+  (r.audio_a_id, r.audio_b_id) NOT IN (SELECT * FROM reverse_duplicate_pairs) AND
+  a.native_speaker IS FALSE AND b.native_speaker IS FALSE AND
+  r.a_gt_b IS TRUE AND
+  r.user_id=rl.subject AND
+  r.audio_a_id=rl.audio_a_id AND
+  r.audio_b_id=rl.audio_b_id AND
+  r.audio_a_id=a.id AND
+  r.audio_b_id=b.id
+GROUP BY
+  rl.subject,
+  rl.n,
+  rl.audio_a_id,
+  rl.audio_b_id,
+  r.audio_a_id,
+  r.audio_b_id,
+  a.path,
+  b.path,
+  a.id,
+  b.id
+ORDER BY
+  n DESC,
+  rl.subject,
+  rl.audio_a_id,
+  rl.audio_b_id
+    ''')
+    return cursor.fetchall()
+
 # 1.0 両方あるいは片方の評定データのない任意２名の２センテンスを選ぶ。
 # 1.1 判定。
 # 1.2 データベース登録。
@@ -82,7 +147,9 @@ def get_unrated_pair():
     cursor.execute('''
 SELECT
   a1.id,
-  a2.id
+  a2.id,
+  count(r.audio_a_id),
+  count(r.audio_b_id)
 FROM
   ratings_ratings AS r
 RIGHT JOIN
@@ -104,8 +171,7 @@ GROUP BY
   a1.id,
   a2.id
 ORDER BY
-  count(a1.id) ASC,
-  count(a2.id) ASC,
+  count(r.audio_a_id) + count(r.audio_b_id) DESC,
   a1.id,
   a2.id
 LIMIT 1''')
