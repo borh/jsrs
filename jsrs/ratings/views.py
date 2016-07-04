@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
-from .models import Ratings, get_next_rating, ratings_done
+from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary
 from .forms import RatingsForm
 
 from ..users.models import Rater
@@ -66,3 +66,25 @@ def ratings_page(request):
 from django.http import JsonResponse
 def get_ratings_done(request):
     return JsonResponse({'ratings_done': ratings_done(request.user.id)})
+
+import pandas as pd
+import datetime
+import hashlib
+def export_table(request):
+    data = get_all_ratings_summary()
+    sio = StringIO()
+    PandasDataFrame = pd.DataFrame(data)
+    PandasWriter = pd.ExcelWriter(sio, engine='xlsxwriter')
+    PandasDataFrame.to_excel(PandasWriter, sheet_name=sheetname)
+    PandasWriter.save()
+
+    sio.seek(0)
+    workbook = sio.getvalue()
+
+    h = hashlib.new('ripemd160')
+    h.update(data)
+    filename = 'jsrs-ratings-data-{}-{}.xlsx'.format(datetime.datetime.now().strftime('%Y-%m-%d_%H%I'), h.hexdigest())
+
+    response = StreamingHttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    return response
