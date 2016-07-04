@@ -21,7 +21,7 @@ django-floppyforms==1.6.2
 django-model-utils==2.5
 
 # Images
-Pillow==3.2.0
+Pillow==3.3.0
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
@@ -43,10 +43,12 @@ django-redis==4.4.3
 redis>=2.10.5
 
 
-
+django-storages
 
 django_compressor==2.0
 raven
 
 # Your custom requirements go here
 rpy2
+numpy
+pandas
