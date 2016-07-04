@@ -44,7 +44,7 @@ def mdprefml(f, n, ij, subj):
 
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H%M%S')
     svg_filename = 'mdprefml-{}.svg'.format(timestamp)
-    r('svg("jsrs/media/{}", width=7, height=7)'.format(svg_filename))
+    r('svg("jsrs/media/{}", width=12, height=12)'.format(svg_filename))
 
     result = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
 
