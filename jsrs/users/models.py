@@ -60,7 +60,7 @@ class Rater(models.Model):
 # which acts a bit like a singleton
 
 from django.contrib import admin
-from .admin import UserAdmin as BaseUserAdmin
+from .admin import MyUserAdmin as BaseUserAdmin
 
 @python_2_unicode_compatible
 class RaterInline(admin.StackedInline):
