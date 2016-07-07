@@ -79,11 +79,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
 MEDIA_URL  = '/app/media/'
 STATIC_URL = '/app/static/'
 
-# COMPRESSOR
-# ------------------------------------------------------------------------------
-COMPRESS_STORAGE = STATICFILES_STORAGE
-COMPRESS_URL = STATIC_URL
-COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
+# # COMPRESSOR
+# # ------------------------------------------------------------------------------
+# COMPRESS_STORAGE = STATICFILES_STORAGE
+# COMPRESS_URL = STATIC_URL
+# COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
 # EMAIL
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
