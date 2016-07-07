@@ -49,6 +49,8 @@
         <form action="{% url 'ratings:ratings' %}" method="post">
           {% csrf_token %}
           {{ form.non_field_errors }}
+          {{ form.audio_a }}
+          {{ form.audio_b }}
           <div class="fieldWrapper center-block text-center">
             {{ form.a_gt_b.errors }}
             <label for="{{ form.a_gt_b.id_for_label }}">より日本語としてきれいな発音だと思う方を選んでください。</label><br />
