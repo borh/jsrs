@@ -21,7 +21,3 @@ brotlipy
 # Email backends for Mailgun, Postmark, SendGrid and more
 # -------------------------------------------------------
 django-anymail==0.4.2
-
-# Raven is the Sentry client
-# --------------------------
-raven==5.21.0

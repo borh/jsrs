@@ -13,5 +13,7 @@ factory_boy==2.7.0
 pytest-django==2.9.1
 pytest-sugar==0.7.1
 
+django-concurrent-test-helper
+
 # QuickCheck-style testing
 hypothesis[django]
