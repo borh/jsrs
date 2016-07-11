@@ -1,4 +1,5 @@
 from hypothesis.extra.django.models import models
+from hypothesis.extra.django import TestCase
 from hypothesis import given
 from django_concurrent_tests.helpers import make_concurrent_calls
 
