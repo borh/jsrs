@@ -19,6 +19,7 @@ class Ratings(models.Model):
     audio_b = models.ForeignKey(Audio, related_name='audio_b_fk', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     a_gt_b = models.BooleanField(verbose_name='AがBより良い', choices=BOOL_CHOICES, db_index=True) # True/1 -> a is better; False/0 -> b is better
+    timestamp = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'Ratings'
