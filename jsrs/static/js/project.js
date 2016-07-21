@@ -34,7 +34,7 @@ this.myNameSpace = this.myNameSpace || {};
       ];
 
       this.displayMessage.innerHTML = 'ロード中';
-      createjs.Sound.alternateExtensions = ['mp3'];
+      //createjs.Sound.alternateExtensions = ['mp3'];
       var loadProxy = createjs.proxy(this.handleLoad, this);
       createjs.Sound.addEventListener('fileload', loadProxy);
       createjs.Sound.registerSounds(sounds, audioPath);
