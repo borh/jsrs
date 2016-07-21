@@ -250,6 +250,7 @@ def get_mdpref_results(sentence_id):
         mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj)
     except Exception as e:
         print('Exception occured while running mdprefml:', e)
+        return ('An Exception occured while running mdprefml:\n{}'.format(e), None)
     return (mdpref_results, mdpref_svg)
 
 import random
