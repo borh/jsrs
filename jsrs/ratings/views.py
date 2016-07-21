@@ -5,15 +5,21 @@ from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
-from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary
-from .forms import RatingsForm
+import pandas as pd
+from django_pandas.io import read_frame
 
 from ..users.models import Rater
+from ..audio.models import Audio
+from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary, get_unrated_pair, get_mdpref_results
+from .forms import RatingsForm
+
+import logging
+logger = logging.getLogger(__name__)
 
 @login_required
 def ratings_page(request):
@@ -79,10 +85,9 @@ from django.http import JsonResponse
 def get_ratings_done(request):
     return JsonResponse({'ratings_done': ratings_done(request.user.id)})
 
-import pandas as pd
-import datetime
-import hashlib
-def export_table(request):
+
+@login_required
+def ratings_export_table(request):
     data = get_all_ratings_summary()
     sio = StringIO()
     PandasDataFrame = pd.DataFrame(data)
