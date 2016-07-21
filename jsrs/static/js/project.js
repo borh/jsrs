@@ -29,12 +29,11 @@ this.myNameSpace = this.myNameSpace || {};
 
       var audioPath = '';
       var sounds = [
-        {id: 'a', src: document.getElementById('a').src},
-        {id: 'b', src: document.getElementById('b').src}
+        {id: 'a', src: document.getElementById('a').getAttribute('src')},
+        {id: 'b', src: document.getElementById('b').getAttribute('src')}
       ];
 
       this.displayMessage.innerHTML = 'ロード中';
-      //createjs.Sound.alternateExtensions = ['mp3'];
       var loadProxy = createjs.proxy(this.handleLoad, this);
       createjs.Sound.addEventListener('fileload', loadProxy);
       createjs.Sound.registerSounds(sounds, audioPath);
