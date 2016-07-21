@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+  <div class="row">
+    <div class="content-rating col-md-12">
+      {% for results, svg in data %}
+      <h4>mdprefml results for sentence id {{ forloop.counter }}</h4>
+      <img src="{{ STATIC_URL }}{{ svg }}" />
+      <pre>{{ results }}</pre>
+      {% endfor %}
+    </div>
+  </div>
+{% else %}
+  <p>本システムを利用するのにアカウントの登録が必要です。</p>
+{% endif %}
+{% endblock content %}
