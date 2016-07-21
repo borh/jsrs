@@ -18,6 +18,7 @@ from pathlib import Path
 import subprocess
 import re
 import json
+from collections import defaultdict
 
 ROOT_PATH = 'jsrs/media/'
 FILE_VARIANT = False
@@ -28,7 +29,7 @@ FILE_VARIANT = False
 # SE Data/s... -> foreign speakers (students)
 # Pilot/ follows $reader-$sentence.mp3 pattern
 
-def audio_files(path, reader_filter=None, sentence_filter=None):
+def audio_files(path, reader_filter=None, sentence_filter=None, sentence_exclusion_filter=None):
     '''Generator returning full_path, basename, and extension of all audio files under given path.'''
     for root, dirs, files in os.walk(path, followlinks=True):
         for name in files:
@@ -44,6 +45,8 @@ def audio_files(path, reader_filter=None, sentence_filter=None):
                     sentence = int(''.join(n for n in sentence_string if n.isdigit())) # remove non-digits
                     if sentence_filter and sentence not in sentence_filter:
                         continue
+                    if sentence in sentence_exclusion_filter[reader]:
+                        continue
                     yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
                 else:
                     recording_set, reader, _ = Path(full_path).parts[-3:]
@@ -51,6 +54,8 @@ def audio_files(path, reader_filter=None, sentence_filter=None):
                         continue
                     sentence = int(''.join(n for n in basename if n.isdigit())) # remove non-digits
                     if sentence_filter and sentence not in sentence_filter:
+                        continue
+                    if sentence in sentence_exclusion_filter[reader]:
                         continue
                     yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
 
@@ -107,6 +112,11 @@ def generate_fixtures(root_path):
     reader_name2pk = {reader['fields']['name']: reader['pk'] for reader in reader_fixtures()}
     reader_filter = set(reader_name2pk.keys())
 
+    sentence_exclusion_df = pd.read_excel('データID.xlsx', sheetname=2, names=['old_name', 'sentence_id', 'new_name'])
+    sentence_exclusion_filter = defaultdict(set)
+    for row in sentence_exclusion_df.itertuples():
+        sentence_exclusion_filter[row.new_name].add( np.asscalar(row.sentence_id))
+
     with open('audio-sentence-fixtures.json', 'w') as f:
         f.write(json.dumps([sentence for sentence in sentence_fixtures()], ensure_ascii=False))
 
@@ -119,7 +129,7 @@ def generate_fixtures(root_path):
                                         #'group': recording_set,
                                         'reader': reader_name2pk[reader],
                                         'sentence': sentence_number2pk[sentence]}}
-                            for (path, _, extension, relpath, recording_set, reader, sentence) in audio_files(root_path, reader_filter, sentence_filter) if extension == '.mp3'], ensure_ascii=False))
+                            for (path, _, extension, relpath, recording_set, reader, sentence) in audio_files(root_path, reader_filter, sentence_filter, sentence_exclusion_filter) if extension == '.mp3'], ensure_ascii=False))
 
 if __name__ == '__main__':
     generate_fixtures(os.path.abspath(ROOT_PATH))
