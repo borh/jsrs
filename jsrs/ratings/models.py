@@ -253,34 +253,23 @@ def get_mdpref_results(sentence_id):
         return ('An Exception occured while running mdprefml:\n{}'.format(e), None)
     return (mdpref_results, mdpref_svg)
 
-import random
+
 def get_next_rating(user_id):
-    # TODO use user_id to join with Users table
-    # ratings = Ratings.objects.values()
-
-    audio_files = get_unrated_pair()
-
-    mdpref_results = None
-    mdpref_svg = None
-    if len(audio_files) == 0:
-
-        # mdpref_results, mdpref_svg = get_mdpref_results()
-
-        audio_files = get_random_pair()
+    audio_files = get_unrated_pair(user_id)
 
     a_model = Audio.objects.get(id=audio_files[0][0])
     b_model = Audio.objects.get(id=audio_files[0][1])
     ab = [a_model, b_model]
-    random.shuffle(ab)
+    # random.shuffle(ab) # FIXME need a order-stable algo to make this safe
     a, b = ab
 
     try:
-        sentence = Sentence.objects.get(sentence=a_model.sentence)
+        sentence = Sentence.objects.get(id=a_model.sentence.id)
     except Exception as e:
         print('Exception getting sentence id="{}"'.format(a_model.sentence))
-        sentence = Sentence(sentence=a_model.id, text='')
+        sentence = Sentence(id=a_model.id, text='')
 
-    return (a, b, sentence.text, (mdpref_results, mdpref_svg))
+    return (a, b, sentence.text)
 
 def ratings_done(user_id):
     return Ratings.objects.filter(user_id=user_id).count()
