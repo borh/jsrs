@@ -20,6 +20,7 @@ urlpatterns = [
 
     # Your stuff: custom urls includes go here
     url(r'^app/ratings/', include('jsrs.ratings.urls', namespace='ratings')),
+    url(r'^app/audio/', include('jsrs.audio.urls', namespace='audio')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
