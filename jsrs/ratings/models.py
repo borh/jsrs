@@ -110,7 +110,7 @@ ORDER BY
     return cursor.fetchall()
 
 
-def get_unrated_pair(user_id):
+def get_unrated_pair(user_id, limit=1):
     '''Gets the next optimal pair for given user.'''
     cursor = connection.cursor()
     cursor.execute('''
@@ -163,7 +163,6 @@ SELECT
   rb.name AS b_reader,
   s.id AS sentence_id,
   (SELECT count(*) FROM ratings_ratings AS rr
-
    WHERE (    rr.audio_a_id = aa.id
           AND rr.a_gt_b IS TRUE)
       OR (    rr.audio_b_id = aa.id
@@ -209,7 +208,7 @@ ORDER BY
   w_a DESC,
   w_b DESC,
   s.order ASC
-LIMIT 1''', [user_id])
+LIMIT %s''', [user_id, limit])
     return cursor.fetchall()
 
 
