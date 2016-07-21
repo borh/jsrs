@@ -239,7 +239,7 @@ def get_mdpref_results(sentence_id):
     mdpref_results = None
     mdpref_svg = None
     try:
-        ratings = get_all_ratings()
+        ratings = get_all_ratings(sentence_id)
         #print('ratings = {}'.format(ratings))
         f = [r[0] for r in ratings]
         n = [r[1] for r in ratings]
