@@ -67,8 +67,7 @@
   <div class="row">
     <div class="content-rating col-md-12">
       <h4>mdprefml results</h4>
-      <img src="{{ STATIC_URL }}{{ mdpref_svg }}" />
-      <pre>{{ mdpref_results }}</pre>
+      <a href="{% url 'ratings:ratings_mdpref_results' %}">Calculate and go to results page</a>
     </div>
   </div>
   {% endif %}
