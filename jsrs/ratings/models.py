@@ -31,7 +31,7 @@ class Ratings(models.Model):
 
 from django.db import connection
 
-def get_all_ratings():
+def get_all_ratings(sentence_id):
     cursor = connection.cursor()
     cursor.execute('''
 SELECT
@@ -49,9 +49,11 @@ FROM
       audio_a_id,
       audio_b_id
     FROM ratings_ratings
+    WHERE sentence_id = %s
     GROUP BY audio_a_id, audio_b_id, user_id
   ) AS rl
 WHERE
+  r.sentence_id = %s AND
   r.a_gt_b IS TRUE AND
   r.user_id=rl.subject AND
   r.audio_a_id=rl.audio_a_id AND
