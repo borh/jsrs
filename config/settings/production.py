@@ -132,10 +132,10 @@ CACHES = {
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'root': {
         'level': 'WARNING',
-        'handlers': ['console'],
+        'handlers': ['console', 'file'],
     },
     'formatters': {
         'verbose': {
@@ -148,27 +148,33 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
-        }
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'jsrs.log',
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django.request': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'propagate': True,
         },
         'gunicorn.error': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
         },
         'gunicorn.access': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
         },
         'django.db.backends': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'propagate': False,
         },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'propagate': False,
         },
     },
