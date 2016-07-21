@@ -85,100 +85,160 @@ def get_all_ratings_summary():
 # 2.4 mdpref計算。
 # 2.5 2.1 に戻る。
 
-def get_unrated_pair():
-    '''両方あるいは片方の評定データのない任意２名の２センテンス（同じ文）を選ぶ。'''
+def get_audio_summary():
     cursor = connection.cursor()
-    cursor.execute('''
+    cursor.execute(
+'''
 SELECT
-  a1.id,
-  a2.id,
-  count(r.audio_a_id),
-  count(r.audio_b_id)
-FROM
-  ratings_ratings AS r
-RIGHT JOIN
-  audio_audio AS a1
-  ON
-    r.audio_a_id=a1.id OR
-    r.audio_b_id=a1.id
-JOIN -- get the pair --
-  audio_audio AS a2
-  ON
-    a1.id!=a2.id AND
-    NOT (a1.native_speaker IS TRUE AND
-         a2.native_speaker IS TRUE) AND
-    a1.sentence=a2.sentence
-WHERE
-  r.audio_a_id IS NULL OR
-  r.audio_b_id IS NULL
-GROUP BY
-  a1.id,
-  a2.id
+  a.path AS audio_path,
+  a.disabled AS audio_disabled,
+  r.name AS reader_name,
+  r.native_speaker AS reader_native_speaker,
+  r.gender AS reader_gender,
+  r.set AS reader_set,
+  r.disabled AS reader_disabled,
+  s.number AS sentence_number,
+  s.order AS sentence_order,
+  s.text AS sentence_text,
+  s.set AS sentence_set,
+  s.disabled AS sentence_disabled
+FROM audio_audio AS a
+JOIN audio_reader AS r
+  ON a.reader_id=r.id
+JOIN audio_sentence AS s
+  ON a.sentence_id=s.id
 ORDER BY
-  count(r.audio_a_id) + count(r.audio_b_id) DESC,
-  a1.id,
-  a2.id
-LIMIT 1''')
+  r.id,
+  s.order''')
     return cursor.fetchall()
 
-def get_random_pair():
-    '''評価回数が少ない任意２名の２センテンス（同じ文）を選ぶ。'''
+
+def get_unrated_pair(user_id):
+    '''Gets the next optimal pair for given user.'''
     cursor = connection.cursor()
     cursor.execute('''
-WITH pairs AS (
+WITH user_ratings AS (
   SELECT
-    a1.id AS a,
-    a2.id AS b,
-    count(r.audio_a_id) + count(r.audio_b_id) AS all_count
+    s.id AS sentence_id,
+    s.order AS sentence_order,
+    count(r.id) AS id_n,
+    s.set AS sentence_set,
+    sum(count(r.id)) OVER (PARTITION BY s.set) AS set_n
   FROM
-    ratings_ratings AS r
-  RIGHT JOIN
-    audio_audio AS a1
-    ON
-      r.audio_a_id=a1.id OR
-      r.audio_b_id=a1.id
+    audio_sentence AS s
   JOIN
-    audio_audio AS a2
+    audio_audio AS a
     ON
-      NOT (a1.native_speaker IS TRUE AND
-           a2.native_speaker IS TRUE) AND
-      a1.id!=a2.id AND
-      a1.sentence=a2.sentence
+          s.disabled IS FALSE
+      AND a.disabled IS FALSE
+      AND a.sentence_id = s.id
+  LEFT OUTER JOIN
+    ratings_ratings AS r
+    ON
+          r.audio_a_id = a.id
+      AND r.user_id    = %s -- param_1
   GROUP BY
-    a1.id,
-    a2.id
+    s.set,
+    s.id
   ORDER BY
-    all_count ASC)
-SELECT a, b
-FROM pairs
-WHERE all_count=(SELECT min(all_count) FROM pairs)
-ORDER BY random()
-LIMIT 1''')
+    set_n DESC,
+    id_n ASC,
+    s.set ASC
+), top_set AS ( -- adds set ordering column
+  SELECT
+    ur.sentence_id,
+    ur.id_n,
+    ur.sentence_set,
+    ur.set_n,
+    div(ur.set_n, (SELECT count(*) FROM audio_reader WHERE disabled IS FALSE)) AS set_n_times
+  FROM
+    user_ratings AS ur
+  ORDER BY
+    set_n_times ASC,
+    --set_n DESC,
+    ur.sentence_set ASC
+  LIMIT 5 -- only return the sentences from top-scoring set
+)
+SELECT
+  aa.id AS a,
+  ab.id AS b,
+  ra.name AS a_reader,
+  rb.name AS b_reader,
+  s.id AS sentence_id,
+  (SELECT count(*) FROM ratings_ratings AS rr
+
+   WHERE (    rr.audio_a_id = aa.id
+          AND rr.a_gt_b IS TRUE)
+      OR (    rr.audio_b_id = aa.id
+          AND rr.a_gt_b IS FALSE)) AS w_a,
+  (SELECT count(*) FROM ratings_ratings AS rr
+   WHERE (    rr.audio_b_id = ab.id
+          AND rr.a_gt_b IS FALSE)
+      OR (    rr.audio_a_id = ab.id
+          AND rr.a_gt_b IS TRUE)) AS w_b,
+  (SELECT count(*) FROM ratings_ratings AS rr
+   WHERE rr.audio_a_id = aa.id
+      OR rr.audio_b_id = aa.id) AS n_a,
+  (SELECT count(*) FROM ratings_ratings AS rr
+   WHERE rr.audio_b_id = ab.id
+      OR rr.audio_a_id = ab.id) AS n_b
+FROM
+  top_set AS ts,
+  audio_sentence AS s,
+  audio_audio AS aa,
+  audio_audio AS ab,
+  audio_reader AS ra,
+  audio_reader AS rb
+WHERE
+      s.set = ts.sentence_set -- from a set of 5 sentences
+  AND s.id  = ts.sentence_id
+  AND aa.sentence_id = s.id
+  AND ab.sentence_id = s.id
+  AND ra.id < rb.id
+  AND ra.id = aa.reader_id
+  AND rb.id = ab.reader_id
+  AND NOT (    ra.native_speaker IS TRUE
+           AND rb.native_speaker IS TRUE)
+  AND  s.disabled IS FALSE
+  AND aa.disabled IS FALSE
+  AND ab.disabled IS FALSE
+  AND ra.disabled IS FALSE
+  AND rb.disabled IS FALSE
+ORDER BY
+  --w_a::float / n_a::float DESC, -- would need this defined top-level
+  ts.id_n ASC,
+  n_a ASC,
+  n_b ASC,
+  w_a DESC,
+  w_b DESC,
+  s.order ASC
+LIMIT 1''', [user_id])
     return cursor.fetchall()
 
-## SELECT
-##   a.id
-## FROM
-##   ratings_ratings AS r
-## RIGHT JOIN
-##   audio_audio AS a
-## ON
-##   r.audio_a_id=a.id OR
-##   r.audio_b_id=a.id
-## WHERE
-##   r.audio_a_id IS NULL OR
-##   r.audio_b_id IS NULL
-## GROUP BY
-##   a.sentence,
-##   a.group,
-##   a.id
-## ORDER BY
-##   a.sentence,
-##   a.group
-## LIMIT 2
+
+from collections import defaultdict
+def get_sentence_sets():
+    cursor = connection.cursor()
+    cursor.execute('''SELECT sentence, set FROM audio_sentence''')
+    id2set = {row[0]: row[1] for row in cursor.fetchall()}
+    sets = set([v for v in id2set.vals()])
+    set2ids = defaultdict(set)
+    for k, v in id2set.items():
+        set2ids[k].add(v)
+    return set2ids
+
+def get_readers():
+    cursor = connection.cursor()
+    cursor.execute('''SELECT DISTINCT reader FROM audio_audio ORDER BY reader''')
+    return [row[0] for row in cursor.fetchall()]
+
+def get_ratings_per_sentence():
+    cursor = connection.cursor()
+    cursor.execute('''SELECT count(DISTINCT sentence) FROM audio_audio WHERE s.id=%s''', [ _ ])
+    number_of_sentences = cursor.fetchone()[0]
 
 from itertools import chain
-def get_mdpref_results():
+def get_mdpref_results(sentence_id):
     mdpref_results = None
     mdpref_svg = None
     try:
