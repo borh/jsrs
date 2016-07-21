@@ -7,18 +7,20 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from jsrs.users.models import User
-from jsrs.audio.models import Audio, Sentence
+from jsrs.audio.models import Audio, Reader, Sentence
 from .r import mdprefml
 
 from django.utils.translation import ugettext_lazy as _
 BOOL_CHOICES = ((True, _('Yes')), (False, _('No')))
 
-@python_2_unicode_compatible
 class Ratings(models.Model):
-    audio_a = models.ForeignKey(Audio, related_name='audio_a_fk', on_delete=models.CASCADE)
-    audio_b = models.ForeignKey(Audio, related_name='audio_b_fk', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    a_gt_b = models.BooleanField(verbose_name='AがBより良い', choices=BOOL_CHOICES, db_index=True) # True/1 -> a is better; False/0 -> b is better
+    audio_a   = models.ForeignKey(Audio, related_name='audio_a_fk', on_delete=models.CASCADE)
+    audio_b   = models.ForeignKey(Audio, related_name='audio_b_fk', on_delete=models.CASCADE)
+    reader_a  = models.ForeignKey(Reader, related_name='reader_a_fk', on_delete=models.CASCADE)
+    reader_b  = models.ForeignKey(Reader, related_name='reader_b_fk', on_delete=models.CASCADE)
+    sentence  = models.ForeignKey(Sentence, on_delete=models.CASCADE)
+    a_gt_b    = models.BooleanField(verbose_name='AがBより良い', choices=BOOL_CHOICES, db_index=True) # True/1 -> a is better; False/0 -> b is better
+    user      = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True)
 
     class Meta:
