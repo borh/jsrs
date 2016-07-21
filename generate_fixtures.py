@@ -20,7 +20,7 @@ import re
 import json
 
 ROOT_PATH = 'jsrs/media/'
-FILE_VARIANT = True
+FILE_VARIANT = False
 
 # 発音評価02 is different
 # JP_EXPERIMENT_1: native speakers
@@ -28,7 +28,7 @@ FILE_VARIANT = True
 # SE Data/s... -> foreign speakers (students)
 # Pilot/ follows $reader-$sentence.mp3 pattern
 
-def audio_files(path):
+def audio_files(path, reader_filter=None, sentence_filter=None):
     '''Generator returning full_path, basename, and extension of all audio files under given path.'''
     for root, dirs, files in os.walk(path, followlinks=True):
         for name in files:
@@ -39,11 +39,19 @@ def audio_files(path):
                 if FILE_VARIANT:
                     _, recording_set, _ = Path(full_path).parts[-3:]
                     reader, sentence_string = basename.split('-')
+                    if reader_filter and reader not in reader_filter:
+                        continue
                     sentence = int(''.join(n for n in sentence_string if n.isdigit())) # remove non-digits
+                    if sentence_filter and sentence not in sentence_filter:
+                        continue
                     yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
                 else:
                     recording_set, reader, _ = Path(full_path).parts[-3:]
+                    if reader_filter and reader not in reader_filter:
+                        continue
                     sentence = int(''.join(n for n in basename if n.isdigit())) # remove non-digits
+                    if sentence_filter and sentence not in sentence_filter:
+                        continue
                     yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
 
 
@@ -54,20 +62,64 @@ def preprocess(root_path):
             mp3_version = os.path.join(os.path.dirname(full_path), basename) + '.mp3'
             if not os.path.exists(mp3_version):
                 print('Transcoding {} to {}'.format(full_path, mp3_version))
-                subprocess.run(['avconv', '-i', full_path, '-qscale:a', '2', mp3_version])
+                subprocess.run(['ffmpeg', '-i', full_path, '-qscale:a', '2', mp3_version])
     for (full_path, _, extension, _, _, _, _) in audio_files(os.path.abspath(ROOT_PATH)):
         if extension == '.mp3':
             print('Normalizing {}'.format(full_path))
             subprocess.run(['mp3gain', '-e', '-r', '-p', '-c', full_path])
 
+import pandas as pd
+import numpy as np
+import math
+def sentence_fixtures(fn='データID.xlsx'):
+    '''Generates sentence fixtures from file'''
+    sentences = pd.read_excel(fn, sheetname=0, names=['number', 'order', 'text'])
+    for pk, row in enumerate(sentences.itertuples()):
+        yield {'model': 'audio.Sentence',
+               'pk': pk+1,
+               'fields': {'number': np.asscalar(row.number),
+                          'order': np.asscalar(row.order),
+                          'set': int(math.floor((np.asscalar(row.order)-1)/5)) + 1,
+                          'text': row.text}}
+
+def reader_fixtures(fn='データID.xlsx'):
+    '''Generates reader fixtures from file'''
+    sentences = pd.read_excel(fn, sheetname=1, names=['old_name', 'gender', 'name', 'disabled'])
+    for pk, row in enumerate(sentences.itertuples()):
+        d = False
+        if row.disabled == 0:
+            d = True
+        ns = True
+        if row.name[1] == '1':
+            ns = False
+        yield {'model': 'audio.Reader',
+               'pk': pk+1,
+               'fields': {'name': row.name, 'gender': row.gender, 'native_speaker': ns, 'disabled': d}}
 
 def generate_fixtures(root_path):
     '''Generates and writes fixtures to json file for later loading.'''
     #preprocess(root_path)
     #print([a for a in audio_files(root_path)])
-    with open('audio-files-fixtures.json', 'w') as f:
+
+    sentence_number2pk = {sentence['fields']['number']: sentence['pk'] for sentence in sentence_fixtures()}
+    sentence_filter = set(sentence_number2pk.keys())
+
+    reader_name2pk = {reader['fields']['name']: reader['pk'] for reader in reader_fixtures()}
+    reader_filter = set(reader_name2pk.keys())
+
+    with open('audio-sentence-fixtures.json', 'w') as f:
+        f.write(json.dumps([sentence for sentence in sentence_fixtures()], ensure_ascii=False))
+
+    with open('audio-reader-fixtures.json', 'w') as f:
+        f.write(json.dumps([reader for reader in reader_fixtures()], ensure_ascii=False))
+
+    with open('audio-audio-fixtures.json', 'w') as f:
         f.write(json.dumps([{'model': 'audio.Audio',
-                             'fields': {'path': relpath, 'group': recording_set, 'reader': '{}-{}'.format(recording_set, reader), 'sentence': sentence}} for (path, _, extension, relpath, recording_set, reader, sentence) in audio_files(root_path) if extension == '.mp3'], ensure_ascii=False))
+                             'fields': {'path': relpath,
+                                        #'group': recording_set,
+                                        'reader': reader_name2pk[reader],
+                                        'sentence': sentence_number2pk[sentence]}}
+                            for (path, _, extension, relpath, recording_set, reader, sentence) in audio_files(root_path, reader_filter, sentence_filter) if extension == '.mp3'], ensure_ascii=False))
 
 if __name__ == '__main__':
     generate_fixtures(os.path.abspath(ROOT_PATH))
