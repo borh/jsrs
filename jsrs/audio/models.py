@@ -13,7 +13,7 @@ class Sentence(models.Model):
     disabled = models.BooleanField(db_index=True, default=False)
 
     def __str__(self):
-        return '{}::{}::{}::{}::{}'.format(self.number, self.text, self.order, self.set, self.disabled)
+        return 'n{}o{}s{} {}'.format(self.number, self.order, self.set, self.text)
 
 class Reader(models.Model):
     name = models.CharField(max_length=255, db_index=True)
@@ -23,7 +23,7 @@ class Reader(models.Model):
     disabled = models.BooleanField(db_index=True, default=False)
 
     def __str__(self):
-        return '{}::{}::{}::{}::{}'.format(self.name, self.native_speaker, self.gender, self.set, self.disabled)
+        return '{} {} {}'.format(self.name, 'NS' if self.native_speaker else 'NNS', self.gender)
 
 class Audio(models.Model):
     path = models.CharField(max_length=255, unique=True, db_index=True)
@@ -37,7 +37,7 @@ class Audio(models.Model):
         verbose_name_plural = 'Audio'
 
     def __str__(self):
-        return '{}::{}::{}::{}'.format(self.reader, self.sentence, self.set, self.disabled)
+        return '{}'.format(self.path)
 
     def get_by_natural_key(self):
         return (self.path) # or (self.sentence, self.reader) ?
