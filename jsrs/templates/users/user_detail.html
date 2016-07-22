@@ -10,7 +10,12 @@
     <div class="col-sm-12">
 
       <h2>{{ object.username }}のプロフィール</h2>
-      <p>以下の項目に関する情報を編集できます：</p>
+
+      <p class="lead">
+        <a class="btn btn-primary" href="{% url 'ratings:ratings' %}" role="button">評価再開へ</a>
+      </p>
+
+      <p>以下の項目に関する情報も編集できます：</p>
       {% if object.name %}
         <p>{{ object.name }}</p>
       {% endif %}
