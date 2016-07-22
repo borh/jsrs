@@ -45,7 +45,7 @@ def audio_files(path, reader_filter=None, sentence_filter=None, sentence_exclusi
                     sentence = int(''.join(n for n in sentence_string if n.isdigit())) # remove non-digits
                     if sentence_filter and sentence not in sentence_filter:
                         continue
-                    if sentence in sentence_exclusion_filter[reader]:
+                    if sentence_exclusion_filter and sentence in sentence_exclusion_filter[reader]:
                         continue
                     yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
                 else:
@@ -55,7 +55,7 @@ def audio_files(path, reader_filter=None, sentence_filter=None, sentence_exclusi
                     sentence = int(''.join(n for n in basename if n.isdigit())) # remove non-digits
                     if sentence_filter and sentence not in sentence_filter:
                         continue
-                    if sentence in sentence_exclusion_filter[reader]:
+                    if sentence_exclusion_filter and sentence in sentence_exclusion_filter[reader]:
                         continue
                     yield((full_path, basename, extension, relpath, recording_set, reader, sentence))
 
@@ -103,7 +103,7 @@ def reader_fixtures(fn='データID.xlsx'):
 
 def generate_fixtures(root_path):
     '''Generates and writes fixtures to json file for later loading.'''
-    #preprocess(root_path)
+    preprocess(root_path)
     #print([a for a in audio_files(root_path)])
 
     sentence_number2pk = {sentence['fields']['number']: sentence['pk'] for sentence in sentence_fixtures()}
