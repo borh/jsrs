@@ -4,7 +4,8 @@ var display;
 
 function init() {
   display = document.getElementById('play-button');
-  display.addEventListener('click', handleClick, false);
+  if (display)
+    display.addEventListener('click', handleClick, false);
 }
 
 function handleClick(event) {
