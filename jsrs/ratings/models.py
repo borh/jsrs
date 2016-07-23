@@ -246,7 +246,7 @@ def get_mdpref_results(sentence_id):
         #print(ij)
         subj = [r[4] for r in ratings]
         # f = [] # TODO -> direct SQL query easier???
-        mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj)
+        mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj, sentence_id)
     except Exception as e:
         print('Exception occured while running mdprefml:', e)
         return ('An Exception occured while running mdprefml:\n{}'.format(e), None)

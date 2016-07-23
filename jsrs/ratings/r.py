@@ -33,7 +33,7 @@ def timeit(method):
 import datetime
 
 @timeit
-def mdprefml(f, n, ij, subj):
+def mdprefml(f, n, ij, subj, sentence_id):
     '''Parameters:
         f   : vector consisting of the # of times that the left stimuli was chosen out of n trials.
         n   : vector consisting of the # of trials.
@@ -46,15 +46,15 @@ def mdprefml(f, n, ij, subj):
     #print(ro.r.matrix(ro.IntVector(ij), ncol=2, byrow=True))
 
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H%M%S')
-    svg_filename = 'mdprefml-{}.svg'.format(timestamp)
+    svg_filename = 'mdprefml-{}-{}.svg'.format(timestamp, sentence_id)
     r('svg("jsrs/media/{}", width=12, height=12)'.format(svg_filename))
 
     result = None
     try:
         result = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
     except Exception as e:
-        logger.warn('Exception while running mdprefml: {}'.format(e))
-        result = 'Exception while running mdprefml: {}'.format(e)
+        logger.warn('Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e))
+        result = 'Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e)
 
     r('dev.off()')
 
