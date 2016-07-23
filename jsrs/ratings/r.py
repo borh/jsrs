@@ -2,6 +2,9 @@ from rpy2.robjects import r
 from rpy2.robjects.packages import importr
 import rpy2.robjects as ro
 
+import logging
+logger = logging.getLogger(__name__)
+
 importr('lazy.mdpref')
 
 # base = importr('base')
@@ -21,8 +24,8 @@ def timeit(method):
         result = method(*args, **kw)
         te = time.time()
 
-        print('%r (%r, %r) %2.2f sec' % \
-              (method.__name__, len(args), len(kw), te - ts))
+        logger.debug('%r (%r, %r) %2.2f sec' % \
+                     (method.__name__, len(args), len(kw), te - ts))
         return result
 
     return timed
