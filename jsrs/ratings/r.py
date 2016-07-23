@@ -49,7 +49,12 @@ def mdprefml(f, n, ij, subj):
     svg_filename = 'mdprefml-{}.svg'.format(timestamp)
     r('svg("jsrs/media/{}", width=12, height=12)'.format(svg_filename))
 
-    result = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
+    result = None
+    try:
+        result = mdprefml_r(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
+    except Exception as e:
+        logger.warn('Exception while running mdprefml: {}'.format(e))
+        result = 'Exception while running mdprefml: {}'.format(e)
 
     r('dev.off()')
 
