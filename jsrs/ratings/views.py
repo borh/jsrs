@@ -21,6 +21,8 @@ from .forms import RatingsForm
 import logging
 logger = logging.getLogger(__name__)
 
+import random
+
 @login_required
 def ratings_page(request):
     try:
@@ -38,6 +40,13 @@ def ratings_page(request):
             # process the data in form.cleaned_data as required
             audio_a = form.cleaned_data['audio_a']
             audio_b = form.cleaned_data['audio_b']
+            a_gt_b = form.cleaned_data['a_gt_b']
+
+            # Enforce correct order in database.
+            if audio_a.id > audio_b.id:
+                audio_a, audio_b = audio_b, audio_a
+                a_gt_b = not a_gt_b
+                logger.debug('Reversing shuffling in ratings: a => {}, b => {}, a_gt_b => {}'.format(audio_a, audio_b, a_gt_b))
 
             r = Ratings(
                 audio_a=audio_a,
@@ -45,15 +54,15 @@ def ratings_page(request):
                 reader_a=audio_a.reader,
                 reader_b=audio_b.reader,
                 sentence=audio_a.sentence,
-                a_gt_b=form.cleaned_data['a_gt_b'],
+                a_gt_b=a_gt_b,
                 user=request.user
             )
             logger.debug(
                 'Rating POST requested for user={} sound_file_a={} sound_file_b={} a_gt_b={}'.format(
                     request.user.id,
-                    form.cleaned_data['audio_a'],
-                    form.cleaned_data['audio_b'],
-                    form.cleaned_data['a_gt_b']
+                    audio_a,
+                    audio_b,
+                    a_gt_b
                 )
             )
             if request.user.is_superuser == False:
@@ -66,6 +75,14 @@ def ratings_page(request):
     # if a GET (or any other method) we'll create a blank form
 
     sound_file_a, sound_file_b, sentence_text = get_next_rating(request.user.id)
+
+    # We randomize a and b to not reflect the bias in the data
+    # ordering (lower ids for native speakers). Note that it is
+    # necessary to reverse a and b and the rating when getting back
+    # the results. Failure to do so will invalidate them.
+    ab = [sound_file_a, sound_file_b]
+    random.shuffle(ab)
+    sound_file_a, sound_file_b = ab
 
     form = RatingsForm(
         data={'audio_a': sound_file_a,
