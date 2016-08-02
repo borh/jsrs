@@ -7,7 +7,7 @@
     <div class="content-rating col-md-12">
       {% for results, svg in data %}
       <h4>mdprefml results for sentence id {{ forloop.counter }}</h4>
-      <img src="{{ STATIC_URL }}{{ svg }}" />
+      <img src="{{ MEDIA_URL }}{{ svg }}" />
       <pre>{{ results }}</pre>
       {% endfor %}
     </div>
