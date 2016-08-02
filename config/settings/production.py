@@ -30,7 +30,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
 WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
-MIDDLEWARE_CLASSES = WHITENOISE_MIDDLEWARE + MIDDLEWARE_CLASSES
+# Whitenoise should be inserted after SecurityMiddleware, which is the first middleware in MIDDLEWARE_CLASSES:
+MIDDLEWARE_CLASSES = (MIDDLEWARE_CLASSES[0], ) + WHITENOISE_MIDDLEWARE + MIDDLEWARE_CLASSES[1:]
 
 
 # SECURITY CONFIGURATION
