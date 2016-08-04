@@ -235,23 +235,14 @@ def get_ratings_per_sentence():
 
 from itertools import chain
 def get_mdpref_results(sentence_id):
-    mdpref_results = None
-    mdpref_svg = None
-    mdpref_ranks = None
-    try:
-        ratings = get_all_ratings(sentence_id)
-        #print('ratings = {}'.format(ratings))
-        f = [r[0] for r in ratings]
-        n = [r[1] for r in ratings]
-        ij = list(chain.from_iterable(r[2:4] for r in ratings))
-        #print(ij)
-        subj = [r[4] for r in ratings]
-        # f = [] # TODO -> direct SQL query easier???
-        mdpref_results, mdpref_svg, mdpref_ranks = mdprefml(f, n, ij, subj, sentence_id)
-    except Exception as e:
-        print('Exception occured while running mdprefml:', e)
-        return ('An Exception occured while running mdprefml:\n{}'.format(e), None, mdpref_ranks)
-    return (mdpref_results, mdpref_svg, mdpref_ranks)
+    ratings = get_all_ratings(sentence_id)
+
+    f = [r[0] for r in ratings]
+    n = [r[1] for r in ratings]
+    ij = list(chain.from_iterable(r[2:4] for r in ratings))
+    subj = [r[4] for r in ratings]
+
+    return mdprefml(f, n, ij, subj, sentence_id)
 
 
 def get_next_rating(user_id):
