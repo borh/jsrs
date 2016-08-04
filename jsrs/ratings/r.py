@@ -3,8 +3,12 @@ from rpy2.robjects.packages import importr
 import rpy2.robjects as ro
 
 import pandas as pd
-#from rpy2.robjects import pandas2ri
-#pandas2ri.activate()
+import numpy as np
+from rpy2.robjects import pandas2ri
+pandas2ri.activate()
+
+from ..audio.models import Audio, Reader
+from jsrs.users.models import User
 
 import logging
 logger = logging.getLogger(__name__)
@@ -26,25 +30,60 @@ def timeit(method):
     return timed
 
 
+def unit_vector(vector):
+    """ Returns the unit vector of the vector.  """
+    return vector / np.linalg.norm(vector)
+
+
+def angle_between(v1, v2):
+    """ Returns the angle in radians between vectors 'v1' and 'v2'::
+
+            >>> angle_between((1, 0, 0), (0, 1, 0))
+            1.5707963267948966
+            >>> angle_between((1, 0, 0), (1, 0, 0))
+            0.0
+            >>> angle_between((1, 0, 0), (-1, 0, 0))
+            3.141592653589793
+    """
+    return np.dot(v1, v2)/np.linalg.norm(v1)/np.linalg.norm(v2)
+
+
+def magnitude(x):
+    return np.sqrt(x[0]**2 + x[1]**2)
+
+
+def scalar_projection(a, b):
+    '''Returns the scalar projection of vector a onto b defined as:
+    s = \|a\|\cos{\theta} = \frac{a\cdot b}{\|b\|}'''
+    return magnitude(a) * angle_between(a, b)
+
+
 def rank_ratings(mdpref_result):
     if not mdpref_result or isinstance(mdpref_result, str):
-        return None
-
-    print('Result:' + mdpref_result)
-    print(type(mdpref_result))
-
-    X = mdpref_result.rx2('X')
-    print(X)
+        return (None, None)
 
     B = mdpref_result.rx2('B')
-    print(B)
+    B_rater_ids = ro.r['rownames'](B)
+    B_df = pd.DataFrame(pandas2ri.ri2py(B), index=B_rater_ids, columns=['b1', 'b2'])
+    B_df['magnitude'] = np.sqrt(B_df['b1'].pow(2) + B_df['b2'].pow(2))
+    B_df['rater'] = ['{} {}'.format(b, User.objects.get(id=b).username) for b in B_rater_ids]
+    B_df.sort_values(by='magnitude', ascending=False, inplace=True)
 
-    #pd.DataFrame()
-    #for k in range():
-    #    pass
+    X = mdpref_result.rx2('X')
+    X_audio_ids = ro.r['rownames'](X)
+    X_df = pd.DataFrame(pandas2ri.ri2py(X), index=X_audio_ids, columns=['x1', 'x2'])
+    X_df['magnitude'] = np.sqrt(X_df['x1'].pow(2) + X_df['x2'].pow(2))
+    X_df['reader'] = [Audio.objects.get(id=audio_id).reader for audio_id in X_audio_ids]
 
-    ranks = pd.DataFrame()
-    return ranks.to_html()
+    for i, rater in enumerate(B_df['rater']):
+        b_normalized_x = [scalar_projection(np.array([row.x1, row.x2]), np.array(B_df.iloc[i, 0:2])) for row in X_df[['x1', 'x2']].itertuples()]
+        X_df[rater] = b_normalized_x
+
+    X_df.sort_values(by=[b for b in B_df['rater']], ascending=[False for b in B_df['rater']], inplace=True)
+
+    rater_ranks = B_df.to_html()
+    reader_ranks = X_df.to_html()
+    return (reader_ranks, rater_ranks)
 
 @timeit
 def mdprefml(f, n, ij, subj, sentence_id):
@@ -67,12 +106,13 @@ def mdprefml(f, n, ij, subj, sentence_id):
     try:
         result = mdpref.mdprefml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
     except Exception as e:
-        logger.warn('Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e))
+        msg = 'Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e)
+        result = msg
+        logger.warn(msg)
         logger.warn('mdprefml input was: {}, {}, {}, {}'.format(tuple(ro.IntVector(f).rclass), tuple(ro.IntVector(n).rclass), tuple(ro.r.matrix(ro.IntVector(ij), nrow=len(f)).rclass), tuple(ro.IntVector(subj).rclass)))
-        result = 'Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e)
 
     r('dev.off()')
 
-    ranks = rank_ratings(result)
+    reader_ranks, rater_ranks = rank_ratings(result)
 
-    return (result, svg_filename, ranks)
+    return (result, svg_filename, reader_ranks, rater_ranks)
