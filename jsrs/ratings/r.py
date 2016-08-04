@@ -9,15 +9,7 @@ import pandas as pd
 import logging
 logger = logging.getLogger(__name__)
 
-importr('lazy.mdpref')
-
-# base = importr('base')
-# from rpy2.robjects import NA_Real
-# m = base.matrix(NA_Real, nrow=100, ncol=10)
-
-# print(r('help(mdprefmx)'))
-
-mdprefml_r = ro.r['mdprefml']
+mdpref = importr('lazy.mdpref')
 
 import time
 import datetime
