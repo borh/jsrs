@@ -27,14 +27,16 @@ def timeit(method):
 
 
 def rank_ratings(mdpref_result):
-    if not mdpref_result:
+    if not mdpref_result or isinstance(mdpref_result, str):
         return None
 
-    print(mdpref_result)
-    X = mdpref_result['X']
+    print('Result:' + mdpref_result)
+    print(type(mdpref_result))
+
+    X = mdpref_result.rx2('X')
     print(X)
 
-    B = mdpref_result['B']
+    B = mdpref_result.rx2('B')
     print(B)
 
     #pd.DataFrame()
