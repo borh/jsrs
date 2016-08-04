@@ -5,11 +5,41 @@
 {% if request.user.is_authenticated %}
   <div class="row">
     <div class="content-rating col-md-12">
-      {% for results, svg, ranks in data %}
+      {% for results, svg, reader_ranks, rater_ranks in data %}
       <h4>mdprefml results for sentence id {{ forloop.counter }}</h4>
       <img src="{{ MEDIA_URL }}{{ svg }}" />
-      {{ ranks }}
-      <pre>{{ results }}</pre>
+      <p>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#sreader{{ forloop.counter }}" aria-expanded="false" aria-controls="sreader{{ forloop.counter }}">
+          Readers ranked by rater
+        </button>
+      </p>
+      <div class="collapse" id="sreader{{ forloop.counter }}">
+        <div class="card card-block">
+          {{ reader_ranks|safe }}
+        </div>
+      </div>
+      <p>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#srater{{ forloop.counter }}" aria-expanded="false" aria-controls="srater{{ forloop.counter }}">
+          Raters ranked by magnitude
+        </button>
+      </p>
+      <div class="collapse" id="srater{{ forloop.counter }}">
+        <div class="card card-block">
+          {{ rater_ranks|safe }}
+        </div>
+      </div>
+      <p>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#sresults{{ forloop.counter }}" aria-expanded="false" aria-controls="sresults{{ forloop.counter }}">
+          Mdprefml results
+        </button>
+      </p>
+      <div class="collapse" id="sresults{{ forloop.counter }}">
+        <div class="card card-block">
+          <pre>{{ results }}</pre>
+        </div>
+      </div>
+      <p>
+
       {% endfor %}
     </div>
   </div>
