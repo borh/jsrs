@@ -237,6 +237,7 @@ from itertools import chain
 def get_mdpref_results(sentence_id):
     mdpref_results = None
     mdpref_svg = None
+    mdpref_ranks = None
     try:
         ratings = get_all_ratings(sentence_id)
         #print('ratings = {}'.format(ratings))
@@ -246,11 +247,11 @@ def get_mdpref_results(sentence_id):
         #print(ij)
         subj = [r[4] for r in ratings]
         # f = [] # TODO -> direct SQL query easier???
-        mdpref_results, mdpref_svg = mdprefml(f, n, ij, subj, sentence_id)
+        mdpref_results, mdpref_svg, mdpref_ranks = mdprefml(f, n, ij, subj, sentence_id)
     except Exception as e:
         print('Exception occured while running mdprefml:', e)
-        return ('An Exception occured while running mdprefml:\n{}'.format(e), None)
-    return (mdpref_results, mdpref_svg)
+        return ('An Exception occured while running mdprefml:\n{}'.format(e), None, mdpref_ranks)
+    return (mdpref_results, mdpref_svg, mdpref_ranks)
 
 
 def get_next_rating(user_id):

@@ -5,9 +5,10 @@
 {% if request.user.is_authenticated %}
   <div class="row">
     <div class="content-rating col-md-12">
-      {% for results, svg in data %}
+      {% for results, svg, ranks in data %}
       <h4>mdprefml results for sentence id {{ forloop.counter }}</h4>
       <img src="{{ MEDIA_URL }}{{ svg }}" />
+      {{ ranks }}
       <pre>{{ results }}</pre>
       {% endfor %}
     </div>

@@ -2,6 +2,10 @@ from rpy2.robjects import r
 from rpy2.robjects.packages import importr
 import rpy2.robjects as ro
 
+import pandas as pd
+from rpy2.robjects import pandas2ri
+pandas2ri.activate()
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -16,9 +20,9 @@ importr('lazy.mdpref')
 mdprefml_r = ro.r['mdprefml']
 
 import time
+import datetime
 
 def timeit(method):
-
     def timed(*args, **kw):
         ts = time.time()
         result = method(*args, **kw)
@@ -27,10 +31,26 @@ def timeit(method):
         logger.debug('%r (%r, %r) %2.2f sec' % \
                      (method.__name__, len(args), len(kw), te - ts))
         return result
-
     return timed
 
-import datetime
+
+def rank_ratings(mdpref_result):
+    if not mdpref_result:
+        return None
+
+    print(mdpref_result)
+    X = mdpref_result['X']
+    print(X)
+
+    B = mdpref_result['B']
+    print(B)
+
+    #pd.DataFrame()
+    #for k in range():
+    #    pass
+
+    ranks = pd.DataFrame()
+    return ranks.to_html()
 
 @timeit
 def mdprefml(f, n, ij, subj, sentence_id):
@@ -58,4 +78,6 @@ def mdprefml(f, n, ij, subj, sentence_id):
 
     r('dev.off()')
 
-    return (result, svg_filename)
+    ranks = rank_ratings(result)
+
+    return (result, svg_filename, ranks)
