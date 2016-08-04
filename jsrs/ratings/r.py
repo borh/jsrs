@@ -3,8 +3,8 @@ from rpy2.robjects.packages import importr
 import rpy2.robjects as ro
 
 import pandas as pd
-from rpy2.robjects import pandas2ri
-pandas2ri.activate()
+#from rpy2.robjects import pandas2ri
+#pandas2ri.activate()
 
 import logging
 logger = logging.getLogger(__name__)
