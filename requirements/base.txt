@@ -5,27 +5,27 @@
 wheel==0.29.0
 
 # Bleeding edge Django
-django==1.9.8
+django==1.9.*
 
 # Configuration
 django-environ==0.4.0
-whitenoise==3.2
+whitenoise==3.2.1
 
 
 # Forms
 django-braces==1.9.0
 django-crispy-forms==1.6.0
-django-floppyforms==1.6.2
+django-floppyforms==1.7.0
 
 # Models
-django-model-utils==2.5.1
+django-model-utils==2.5.2
 
 # Images
-Pillow==3.3.0
+Pillow==3.3.1
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
-django-allauth==0.26.1
+django-allauth==0.27.0
 
 
 # Python-PostgreSQL Database Adapter
@@ -45,7 +45,7 @@ redis>=2.10.5
 
 django-storages
 
-django_compressor==2.0
+django_compressor==2.1
 
 # Your custom requirements go here
 rpy2

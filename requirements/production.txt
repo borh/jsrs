@@ -20,4 +20,4 @@ brotlipy
 
 # Email backends for Mailgun, Postmark, SendGrid and more
 # -------------------------------------------------------
-django-anymail==0.4.2
+django-anymail==0.5
