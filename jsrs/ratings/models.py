@@ -314,7 +314,7 @@ def get_thurstone_results(sentence_id):
          for ro in readers]
 
     r = dict(zip(readers, thurstone(np.array(m))))
-    return sorted(r.items(), key = lambda x: x[1])
+    return sorted(r.items(), key = lambda x: x[1], reverse = True)
 
 def get_next_rating(user_id):
     audio_files = get_unrated_pair(user_id)
