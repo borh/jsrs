@@ -312,7 +312,9 @@ def get_thurstone_results(sentence_id):
 
     m = [[comparisons[ri][ro] if (ri != ro and ri in comparisons and ro in comparisons[ri]) else 0.0 for ri in readers]
          for ro in readers]
-    return dict(zip(readers, thurstone(np.array(m))))
+
+    r = dict(zip(readers, thurstone(np.array(m))))
+    return sorted(r.items(), key = lambda x: x[1])
 
 def get_next_rating(user_id):
     audio_files = get_unrated_pair(user_id)
