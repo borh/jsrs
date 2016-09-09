@@ -15,7 +15,7 @@ from django_pandas.io import read_frame
 
 from ..users.models import Rater
 from ..audio.models import Audio
-from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary, get_unrated_pair, get_mdpref_results
+from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary, get_unrated_pair, get_mdpref_results, get_thurstone_results
 from .forms import RatingsForm
 
 import logging
@@ -110,7 +110,8 @@ def ratings_page(request):
 
 @login_required
 def mdpref_results(request):
-    data = [get_mdpref_results(sentence_id) for sentence_id in range(1,41)]
+    data = [get_mdpref_results(sentence_id) + tuple([get_thurstone_results(sentence_id)])
+            for sentence_id in range(1, 41)]
     return render(request,
                   'ratings/mdpref.html',
                   {'data': data})

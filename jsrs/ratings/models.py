@@ -6,6 +6,9 @@ from django.utils.translation import ugettext_lazy as _
 from jsrs.users.models import User
 from jsrs.audio.models import Audio, Reader, Sentence
 from .r import mdprefml
+from .thurstone import thurstone
+import numpy as np
+from collections import defaultdict
 
 from django.utils.translation import ugettext_lazy as _
 BOOL_CHOICES = ((True, _('Yes')), (False, _('No')))
@@ -66,6 +69,40 @@ ORDER BY
   rl.audio_b_id''', [sentence_id, sentence_id])
     return cursor.fetchall()
 
+
+def get_comparison_matrix(sentence_id):
+    cursor = connection.cursor()
+    cursor.execute('''
+SELECT
+  rl.n AS n, -- total number of comparisons between a and b
+  COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  r.reader_a_id AS a_reader,
+  r.reader_b_id AS b_reader
+FROM
+  ratings_ratings AS r,
+  LATERAL (
+    SELECT
+      count(*) AS n,
+      audio_a_id,
+      audio_b_id
+    FROM ratings_ratings
+    WHERE sentence_id = %s
+    GROUP BY audio_a_id, audio_b_id
+  ) AS rl
+WHERE
+  r.sentence_id = %s AND
+  r.a_gt_b IS TRUE AND
+  r.audio_a_id=rl.audio_a_id AND
+  r.audio_b_id=rl.audio_b_id
+GROUP BY
+  rl.n,
+  a_reader,
+  b_reader
+ORDER BY
+  a_reader,
+  b_reader;
+    ''', [sentence_id, sentence_id])
+    return cursor.fetchall()
 
 def get_all_ratings_summary():
     return Ratings.objects.all()
@@ -244,6 +281,38 @@ def get_mdpref_results(sentence_id):
 
     return mdprefml(f, n, ij, subj, sentence_id)
 
+def get_thurstone_results(sentence_id):
+#  n  | f | a_reader | b_reader
+# ----+---+----------+----------
+#   2 | 2 |        7 |        8
+#   4 | 2 |        7 |       11
+#   3 | 3 |        7 |       22
+#   5 | 2 |        7 |       30
+#   2 | 2 |        7 |       36
+#   5 | 4 |        7 |       44
+#   4 | 1 |        8 |       22
+#   4 | 3 |        8 |       35
+#   2 | 2 |        8 |       36
+#   7 | 3 |        8 |       44
+    d = get_comparison_matrix(sentence_id)
+
+    readers = set([r[2] for r in d])
+    readers |= set([r[3] for r in d])
+    readers = sorted(readers)
+
+    # n = len(readers)
+
+    comparisons = defaultdict(dict)
+    for r in d: # Difference from reference implementation: we don't have an equal number of comparisons per item, so we have to normalize on a case-by-case basis.
+        print(r)
+        comparisons[r[2]][r[3]] = r[1] / r[0]
+        comparisons[r[3]][r[2]] = (r[0] - r[1]) / r[0]
+
+    print(comparisons)
+
+    m = [[comparisons[ri][ro] if (ri != ro and ri in comparisons and ro in comparisons[ri]) else 0.0 for ri in readers]
+         for ro in readers]
+    return dict(zip(readers, thurstone(np.array(m))))
 
 def get_next_rating(user_id):
     audio_files = get_unrated_pair(user_id)
