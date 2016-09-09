@@ -51,3 +51,4 @@ django_compressor==2.1
 rpy2
 numpy
 pandas
+scipy
