@@ -309,12 +309,12 @@ def get_thurstone_results(sentence_id):
         comparisons[a_reader][b_reader] = f / n
         comparisons[b_reader][a_reader] = (n - f) / n
 
-    print(comparisons)
-
-    m = [[comparisons[ri][ro] if (ri != ro and ri in comparisons and ro in comparisons[ri]) else 0.0 for ri in readers]
+    m = [[comparisons[ri][ro] if (ri != ro and ri in comparisons and ro in comparisons[ri]) else 0.5
+          for ri in readers]
          for ro in readers]
 
     r = dict(zip([Reader.objects.get(id=reader_id) for reader_id in readers], thurstone(np.array(m))))
+
     return sorted(r.items(), key = lambda x: x[1], reverse = True)
 
 def get_next_rating(user_id):
