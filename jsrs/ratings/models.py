@@ -183,7 +183,8 @@ WITH user_ratings AS (
     ur.id_n,
     ur.sentence_set,
     ur.set_n,
-    div(ur.set_n, (SELECT count(*) FROM audio_reader WHERE disabled IS FALSE)) AS set_n_times
+    -- div(ur.set_n, (SELECT count(*) FROM audio_reader WHERE disabled IS FALSE)) AS set_n_times
+    div(ur.set_n, 5000) AS set_n_times
   FROM
     user_ratings AS ur
   ORDER BY
