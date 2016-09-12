@@ -100,8 +100,7 @@ GROUP BY
   b_reader
 ORDER BY
   a_reader,
-  b_reader;
-    ''', [sentence_id, sentence_id])
+  b_reader''', [sentence_id, sentence_id])
     return cursor.fetchall()
 
 def get_all_ratings_summary():
