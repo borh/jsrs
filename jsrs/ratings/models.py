@@ -281,18 +281,21 @@ def get_mdpref_results(sentence_id):
     return mdprefml(f, n, ij, subj, sentence_id)
 
 def get_thurstone_results(sentence_id):
-#  n  | f | a_reader | b_reader
-# ----+---+----------+----------
-#   2 | 2 |        7 |        8
-#   4 | 2 |        7 |       11
-#   3 | 3 |        7 |       22
-#   5 | 2 |        7 |       30
-#   2 | 2 |        7 |       36
-#   5 | 4 |        7 |       44
-#   4 | 1 |        8 |       22
-#   4 | 3 |        8 |       35
-#   2 | 2 |        8 |       36
-#   7 | 3 |        8 |       44
+    '''Retrieves comparison trails data from the database and converts it into a comparison matrix as a Numpy array for calculation by the Thurstone method:
+ n  | f | a_reader | b_reader
+----+---+----------+----------
+  2 | 2 |        7 |        8
+  4 | 2 |        7 |       11
+  3 | 3 |        7 |       22
+  5 | 2 |        7 |       30
+  2 | 2 |        7 |       36
+  5 | 4 |        7 |       44
+  4 | 1 |        8 |       22
+  4 | 3 |        8 |       35
+  2 | 2 |        8 |       36
+  7 | 3 |        8 |       44
+
+    Readers not having comparisons are excluded from the calculation.'''
     d = get_comparison_matrix(sentence_id)
 
     readers = set([r[2] for r in d])
@@ -302,10 +305,9 @@ def get_thurstone_results(sentence_id):
     # n = len(readers)
 
     comparisons = defaultdict(dict)
-    for r in d: # Difference from reference implementation: we don't have an equal number of comparisons per item, so we have to normalize on a case-by-case basis.
-        print(r)
-        comparisons[r[2]][r[3]] = r[1] / r[0]
-        comparisons[r[3]][r[2]] = (r[0] - r[1]) / r[0]
+    for n, f, a_reader, b_reader in d: # Difference from reference implementation: we don't have an equal number of comparisons per item, so we have to normalize on a case-by-case basis.
+        comparisons[a_reader][b_reader] = f / n
+        comparisons[b_reader][a_reader] = (n - f) / n
 
     print(comparisons)
 
