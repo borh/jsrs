@@ -44,8 +44,8 @@ WITH user_n_ratings AS (
 SELECT
   rl.n,
   COUNT(r.a_gt_b) AS f, -- reason for lateral query: need to sum over only TRUE a_gt_b
-  rl.audio_a_id,
-  rl.audio_b_id,
+  rl.reader_a_id,
+  rl.reader_b_id,
   rl.subject
 FROM
   ratings_ratings AS r,
@@ -53,8 +53,8 @@ FROM
     SELECT
       rr.user_id AS subject,
       count(a_gt_b) AS n,
-      audio_a_id,
-      audio_b_id
+      rr.reader_a_id,
+      rr.reader_b_id
     FROM
       ratings_ratings AS rr,
       user_n_ratings AS u
@@ -62,23 +62,23 @@ FROM
       rr.sentence_id = %s AND
       rr.user_id = u.user_id AND
       u.n_ratings >= 10
-    GROUP BY audio_a_id, audio_b_id, rr.user_id
+    GROUP BY reader_a_id, reader_b_id, rr.user_id
   ) AS rl
 WHERE
   r.sentence_id = %s AND
   r.a_gt_b IS TRUE AND
-  r.user_id=rl.subject AND
-  r.audio_a_id=rl.audio_a_id AND
-  r.audio_b_id=rl.audio_b_id
+  r.user_id = rl.subject AND
+  r.reader_a_id = rl.reader_a_id AND
+  r.reader_b_id = rl.reader_b_id
 GROUP BY
   rl.subject,
   rl.n,
-  rl.audio_a_id,
-  rl.audio_b_id
+  rl.reader_a_id,
+  rl.reader_b_id
 ORDER BY
   rl.subject,
-  rl.audio_a_id,
-  rl.audio_b_id''', [sentence_id, sentence_id, sentence_id])
+  rl.reader_a_id,
+  rl.reader_b_id''', [sentence_id, sentence_id, sentence_id])
     return cursor.fetchall()
 
 
@@ -288,8 +288,8 @@ def get_mdpref_results(sentence_id):
 
     f = [r[0] for r in ratings]
     n = [r[1] for r in ratings]
-    ij = list(chain.from_iterable(r[2:4] for r in ratings))
-    subj = [r[4] for r in ratings]
+    ij = list(chain.from_iterable([str(Reader.objects.get(id=r_id)) for r_id in r[2:4]] for r in ratings))
+    subj = [User.objects.get(id=r[4]).username for r in ratings]
 
     return mdprefml(f, n, ij, subj, sentence_id)
 

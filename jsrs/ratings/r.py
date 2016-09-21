@@ -104,12 +104,12 @@ def mdprefml(f, n, ij, subj, sentence_id):
 
     result = None
     try:
-        result = mdpref.mdprefml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.IntVector(ij), nrow=len(f)), ro.IntVector(subj), print=0, plot=1)
+        result = mdpref.mdprefml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.StrVector(ij), nrow=len(f)), ro.StrVector(subj), print=0, plot=1)
     except Exception as e:
         msg = 'Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e)
         result = msg
         logger.warn(msg)
-        logger.warn('mdprefml input was: {}, {}, {}, {}'.format(tuple(ro.IntVector(f).rclass), tuple(ro.IntVector(n).rclass), tuple(ro.r.matrix(ro.IntVector(ij), nrow=len(f)).rclass), tuple(ro.IntVector(subj).rclass)))
+        logger.warn('mdprefml input was: {}, {}, {}, {}'.format(tuple(ro.IntVector(f).rclass), tuple(ro.IntVector(n).rclass), tuple(ro.r.matrix(ro.StrVector(ij), nrow=len(f)).rclass), tuple(ro.StrVector(subj).rclass)))
 
     r('dev.off()')
 
