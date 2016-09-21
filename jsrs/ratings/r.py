@@ -66,14 +66,14 @@ def rank_ratings(mdpref_result):
     B_rater_ids = ro.r['rownames'](B)
     B_df = pd.DataFrame(pandas2ri.ri2py(B), index=B_rater_ids, columns=['b1', 'b2'])
     B_df['magnitude'] = np.sqrt(B_df['b1'].pow(2) + B_df['b2'].pow(2))
-    B_df['rater'] = ['{} {}'.format(b, User.objects.get(id=b).username) for b in B_rater_ids]
+    B_df['rater'] = B_rater_ids # ['{} {}'.format(b, User.objects.get(id=b).username) for b in B_rater_ids]
     B_df.sort_values(by='magnitude', ascending=False, inplace=True)
 
     X = mdpref_result.rx2('X')
     X_audio_ids = ro.r['rownames'](X)
     X_df = pd.DataFrame(pandas2ri.ri2py(X), index=X_audio_ids, columns=['x1', 'x2'])
     X_df['magnitude'] = np.sqrt(X_df['x1'].pow(2) + X_df['x2'].pow(2))
-    X_df['reader'] = [Audio.objects.get(id=audio_id).reader for audio_id in X_audio_ids]
+    X_df['reader'] = X_audio_ids # [Audio.objects.get(id=audio_id).reader for audio_id in X_audio_ids]
 
     for i, rater in enumerate(B_df['rater']):
         b_normalized_x = [scalar_projection(np.array([row.x1, row.x2]), np.array(B_df.iloc[i, 0:2])) for row in X_df[['x1', 'x2']].itertuples()]
