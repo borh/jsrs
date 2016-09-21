@@ -34,6 +34,13 @@ from django.db import connection
 def get_all_ratings(sentence_id):
     cursor = connection.cursor()
     cursor.execute('''
+WITH user_n_ratings AS (
+  SELECT user_id, count(*) AS n_ratings
+  FROM ratings_ratings
+  WHERE sentence_id = %s
+  GROUP BY user_id
+  ORDER BY n_ratings DESC
+)
 SELECT
   rl.n,
   COUNT(r.a_gt_b) AS f, -- reason for lateral query: need to sum over only TRUE a_gt_b
@@ -44,13 +51,18 @@ FROM
   ratings_ratings AS r,
   LATERAL (
     SELECT
-      user_id AS subject,
+      rr.user_id AS subject,
       count(a_gt_b) AS n,
       audio_a_id,
       audio_b_id
-    FROM ratings_ratings
-    WHERE sentence_id = %s
-    GROUP BY audio_a_id, audio_b_id, user_id
+    FROM
+      ratings_ratings AS rr,
+      user_n_ratings AS u
+    WHERE
+      rr.sentence_id = %s AND
+      rr.user_id = u.user_id AND
+      u.n_ratings >= 10
+    GROUP BY audio_a_id, audio_b_id, rr.user_id
   ) AS rl
 WHERE
   r.sentence_id = %s AND
@@ -66,7 +78,7 @@ GROUP BY
 ORDER BY
   rl.subject,
   rl.audio_a_id,
-  rl.audio_b_id''', [sentence_id, sentence_id])
+  rl.audio_b_id''', [sentence_id, sentence_id, sentence_id])
     return cursor.fetchall()
 
 
