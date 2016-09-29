@@ -31,16 +31,93 @@ class Ratings(models.Model):
 
 from django.db import connection
 
-def get_all_ratings(sentence_id):
+def get_all_ratings_by_sentence():
     cursor = connection.cursor()
     cursor.execute('''
-WITH user_n_ratings AS (
-  SELECT user_id, count(*) AS n_ratings
-  FROM ratings_ratings
-  WHERE sentence_id = %s
-  GROUP BY user_id
-  ORDER BY n_ratings DESC
-)
+SELECT
+  rl.n AS n, -- total number of comparisons between a and b
+  COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  re_a.name AS i,
+  re_b.name AS j,
+  rl.subject,
+  r.sentence_id
+FROM
+  ratings_ratings AS r,
+  audio_reader AS re_a,
+  audio_reader AS re_b,
+  LATERAL (
+    SELECT
+      user_id AS subject,
+      count(*) AS n,
+      audio_a_id,
+      audio_b_id,
+      sentence_id
+    FROM ratings_ratings
+    GROUP BY audio_a_id, audio_b_id, user_id, sentence_id
+  ) AS rl
+WHERE
+  r.a_gt_b IS TRUE AND
+  r.audio_a_id = rl.audio_a_id AND
+  r.audio_b_id = rl.audio_b_id AND
+  r.sentence_id = rl.sentence_id AND
+  r.reader_a_id = re_a.id AND
+  r.reader_b_id = re_b.id
+GROUP BY
+  r.sentence_id,
+  rl.n,
+  i,
+  j,
+  rl.subject
+ORDER BY
+  r.sentence_id,
+  i,
+  j,
+  rl.subject''')
+    return cursor.fetchall()
+
+def get_all_ratings():
+    cursor = connection.cursor()
+    cursor.execute('''
+SELECT
+  rl.n AS n, -- total number of comparisons between a and b
+  COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  re_a.name || '.' || r.sentence_id AS i,
+  re_b.name || '.' || r.sentence_id AS j,
+  rl.subject
+FROM
+  ratings_ratings AS r,
+  audio_reader AS re_a,
+  audio_reader AS re_b,
+  LATERAL (
+    SELECT
+      user_id AS subject,
+      count(*) AS n,
+      audio_a_id,
+      audio_b_id
+    FROM ratings_ratings
+    GROUP BY audio_a_id, audio_b_id, user_id
+  ) AS rl
+WHERE
+  r.a_gt_b IS TRUE AND
+  r.audio_a_id = rl.audio_a_id AND
+  r.audio_b_id = rl.audio_b_id AND
+  r.reader_a_id = re_a.id AND
+  r.reader_b_id = re_b.id
+GROUP BY
+  i,
+  j,
+  rl.n,
+  rl.subject
+ORDER BY
+  i,
+  j,
+  rl.subject''')
+    return cursor.fetchall()
+
+
+def get_all_ratings_per_sentence(sentence_id):
+    cursor = connection.cursor()
+    cursor.execute('''
 SELECT
   rl.n,
   COUNT(r.a_gt_b) AS f, -- reason for lateral query: need to sum over only TRUE a_gt_b
@@ -56,13 +133,11 @@ FROM
       rr.reader_a_id,
       rr.reader_b_id
     FROM
-      ratings_ratings AS rr,
-      user_n_ratings AS u
+      ratings_ratings AS rr
     WHERE
-      rr.sentence_id = %s AND
-      rr.user_id = u.user_id AND
-      u.n_ratings >= 10
-    GROUP BY reader_a_id, reader_b_id, rr.user_id
+      rr.sentence_id = %s
+    GROUP BY
+      reader_a_id, reader_b_id, rr.user_id
   ) AS rl
 WHERE
   r.sentence_id = %s AND
@@ -78,7 +153,7 @@ GROUP BY
 ORDER BY
   rl.subject,
   rl.reader_a_id,
-  rl.reader_b_id''', [sentence_id, sentence_id, sentence_id])
+  rl.reader_b_id''', [sentence_id, sentence_id])
     return cursor.fetchall()
 
 
@@ -114,6 +189,7 @@ ORDER BY
   a_reader,
   b_reader''', [sentence_id, sentence_id])
     return cursor.fetchall()
+
 
 def get_all_ratings_summary():
     return Ratings.objects.all()
@@ -284,7 +360,7 @@ def get_ratings_per_sentence():
 
 from itertools import chain
 def get_mdpref_results(sentence_id):
-    ratings = get_all_ratings(sentence_id)
+    ratings = get_all_ratings_per_sentence(sentence_id)
 
     f = [r[0] for r in ratings]
     n = [r[1] for r in ratings]
