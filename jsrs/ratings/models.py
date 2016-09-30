@@ -182,8 +182,8 @@ FROM
 WHERE
   r.sentence_id = %s AND
   r.a_gt_b IS TRUE AND
-  r.audio_a_id=rl.audio_a_id AND
-  r.audio_b_id=rl.audio_b_id
+  r.audio_a_id = rl.audio_a_id AND
+  r.audio_b_id = rl.audio_b_id
 GROUP BY
   rl.n,
   a_reader,
