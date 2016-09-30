@@ -35,8 +35,8 @@ def get_all_ratings_by_sentence():
     cursor = connection.cursor()
     cursor.execute('''
 SELECT
-  rl.n AS n, -- total number of comparisons between a and b
   COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  rl.n AS n, -- total number of comparisons between a and b
   re_a.name AS i,
   re_b.name AS j,
   rl.subject,
@@ -75,12 +75,13 @@ ORDER BY
   rl.subject''')
     return cursor.fetchall()
 
+
 def get_all_ratings():
     cursor = connection.cursor()
     cursor.execute('''
 SELECT
-  rl.n AS n, -- total number of comparisons between a and b
   COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  rl.n AS n, -- total number of comparisons between a and b
   re_a.name || '.' || r.sentence_id AS i,
   re_b.name || '.' || r.sentence_id AS j,
   rl.subject
@@ -119,8 +120,8 @@ def get_all_ratings_per_sentence(sentence_id):
     cursor = connection.cursor()
     cursor.execute('''
 SELECT
-  rl.n,
   COUNT(r.a_gt_b) AS f, -- reason for lateral query: need to sum over only TRUE a_gt_b
+  rl.n,
   rl.reader_a_id,
   rl.reader_b_id,
   rl.subject
