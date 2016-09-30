@@ -57,6 +57,7 @@ FROM
   ) AS rl
 WHERE
   r.a_gt_b IS TRUE AND
+  r.user_id = rl.subject AND
   r.audio_a_id = rl.audio_a_id AND
   r.audio_b_id = rl.audio_b_id AND
   r.sentence_id = rl.sentence_id AND
@@ -100,6 +101,7 @@ FROM
   ) AS rl
 WHERE
   r.a_gt_b IS TRUE AND
+  r.user_id = rl.subject AND
   r.audio_a_id = rl.audio_a_id AND
   r.audio_b_id = rl.audio_b_id AND
   r.reader_a_id = re_a.id AND
