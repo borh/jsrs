@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from jsrs.users.models import User
 from jsrs.audio.models import Audio, Reader, Sentence
-from .r import mdprefml
+from .r import mdprefml, c5ml, biplot
 from .thurstone import thurstone
 import numpy as np
 from collections import defaultdict
@@ -447,9 +447,40 @@ def get_thurstone_results(sentence_id):
           for ri in readers]
          for ro in readers]
 
-    r = dict(zip([Reader.objects.get(id=reader_id) for reader_id in readers], thurstone(np.array(m))))
+    r = dict(zip([Reader.objects.get(id=reader_id).name for reader_id in readers], thurstone(np.array(m))))
 
     return sorted(r.items(), key = lambda x: x[1], reverse = True)
+
+def get_c5ml_sentence_biplot(sentence_data):
+
+    svg_filename = biplot(sentence_data)
+
+    return svg_filename
+
+def get_c5ml_rater_biplot():
+
+    raters = get_unique_raters()
+
+    results = []
+    labels = raters
+
+    for rater_id in raters:
+        ratings = get_rater_comparison_matrix(rater_id)
+        f = [r[0] for r in ratings]
+        n = [r[1] for r in ratings]
+        ij = list(chain.from_iterable([r_id for r_id in r[2:4]] for r in ratings))
+
+        c5ml_result = c5ml(f, n, ij)
+
+        if not isinstance(c5ml_result, str):
+            results.append(c5ml_result)
+            labels.remove(rater_id)
+
+    svg_filename = biplot(results,
+                          labels=[User.objects.get(id=rater_id).username for rater_id in labels],
+                          type='rater')
+
+    return svg_filename
 
 def get_next_rating(user_id):
     audio_files = get_unrated_pair(user_id)

@@ -4,8 +4,11 @@ import rpy2.robjects as ro
 
 import pandas as pd
 import numpy as np
-from rpy2.robjects import pandas2ri
+from rpy2.robjects import pandas2ri, numpy2ri
 pandas2ri.activate()
+
+import rpy2.rinterface as ri
+ri.initr()
 
 from ..audio.models import Audio, Reader
 from jsrs.users.models import User
@@ -14,6 +17,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 mdpref = importr('lazy.mdpref')
+graphics = importr('graphics') # Needed by biplot.
+
+rlist = ri.baseenv["list"]
 
 import time
 import datetime
@@ -85,6 +91,25 @@ def rank_ratings(mdpref_result):
     reader_ranks = X_df.to_html()
     return (reader_ranks, rater_ranks)
 
+
+def c5ml(f, n, ij):
+
+    c5ml_result = None
+
+    try:
+        c5ml_result = mdpref.c5ml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.StrVector(ij), nrow=len(f)), print=0)
+        c5ml_xs = c5ml_result.rx2('xs')
+        c5ml_names = ro.r['names'](c5ml_xs)
+        c5ml_result = dict(zip(c5ml_names, c5ml_xs))
+        c5ml_result = sorted(c5ml_result.items(), key = lambda x: x[1], reverse = True)
+    except Exception as e:
+        msg = 'Exception while running c5ml: {}'.format(e)
+        c5ml_result = msg
+        logger.warn(msg)
+
+    return c5ml_result
+
+
 @timeit
 def mdprefml(f, n, ij, subj, sentence_id):
     '''Parameters:
@@ -96,7 +121,6 @@ def mdprefml(f, n, ij, subj, sentence_id):
     These four objects have the same length or # of rows.
     The k-th elements of the quartet indicate that subj[k] preferred stimulus ij[k,1] over ij[k,2] f[k] times when exposed to the pair n[k] times.
     The paired comparison for each subject does no have to be complete.'''
-    #print(ro.r.matrix(ro.IntVector(ij), ncol=2, byrow=True))
 
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H%M%S')
     svg_filename = 'mdprefml-{}-{}.svg'.format(timestamp, sentence_id)
@@ -111,16 +135,45 @@ def mdprefml(f, n, ij, subj, sentence_id):
         msg = 'Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e)
         mdpref_result = msg
         logger.warn(msg)
-        logger.warn('mdprefml input was: {}, {}, {}, {}'.format(tuple(ro.IntVector(f).rclass), tuple(ro.IntVector(n).rclass), tuple(ro.r.matrix(ro.StrVector(ij), nrow=len(f)).rclass), tuple(ro.StrVector(subj).rclass)))
 
     r('dev.off()')
 
-    c5ml_result = mdpref.c5ml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.StrVector(ij), nrow=len(f)), print=0)
-    c5ml_xs = c5ml_result.rx2('xs')
-    c5ml_names = ro.r['names'](c5ml_xs)
-    c5ml_result = dict(zip(c5ml_names, c5ml_xs))
-    c5ml_result = sorted(c5ml_result.items(), key = lambda x: x[1], reverse = True)
+    c5ml_result = c5ml(f, n, ij)
 
     reader_ranks, rater_ranks = rank_ratings(mdpref_result)
 
     return (mdpref_result, c5ml_result, svg_filename, reader_ranks, rater_ranks)
+
+
+def biplot(data, labels=None, type='sentence'):
+
+    readers = list(set(reader for result in data for reader, _ in result))
+
+    m = np.matrix([[dict(result).get(reader, 0.0) for reader in readers] for result in data]) # ro.NA_Real
+
+    timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H%M%S')
+    svg_filename = 'c5ml-{}-{}.svg'.format(type, timestamp)
+    r('svg("jsrs/media/{}", width=12, height=12)'.format(svg_filename))
+
+    m = np.asarray(m) # Convert back to ndarray as rpy2 blows the recursion stack with matrices.
+    nc, nr = m.shape # Flipped because of transpose below:
+    rm = ro.FloatVector(m.transpose().reshape((m.size)))
+
+    rm = ro.r.matrix(rm, nrow=nr, ncol=nc)
+    ro.globalenv["rm"] = rm
+    if labels:
+        ro.globalenv["col.labels"] = ro.StrVector(labels)
+    else:
+        ro.globalenv["col.labels"] = ro.StrVector(list('s' + str(i) for i in range(1, nc + 1)))
+    ro.globalenv["row.labels"] = ro.StrVector(readers)
+
+    r('colnames(rm) <- col.labels')
+    r('rownames(rm) <- row.labels')
+    r('pca <- prcomp(rm)')
+    #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit)')
+    r('biplot(pca)')
+   # ro.r['biplot'](pca)
+
+    r('dev.off()')
+
+    return svg_filename
