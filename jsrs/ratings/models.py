@@ -164,8 +164,8 @@ def get_comparison_matrix(sentence_id):
     cursor = connection.cursor()
     cursor.execute('''
 SELECT
-  rl.n AS n, -- total number of comparisons between a and b
   COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  rl.n AS n, -- total number of comparisons between a and b
   r.reader_a_id AS a_reader,
   r.reader_b_id AS b_reader
 FROM
