@@ -409,7 +409,7 @@ def get_mdpref_results(sentence_id):
 
     f = [r[0] for r in ratings]
     n = [r[1] for r in ratings]
-    ij = list(chain.from_iterable([str(Reader.objects.get(id=r_id)) for r_id in r[2:4]] for r in ratings))
+    ij = list(chain.from_iterable([Reader.objects.get(id=r_id).name for r_id in r[2:4]] for r in ratings))
     subj = [User.objects.get(id=r[4]).username for r in ratings]
 
     return mdprefml(f, n, ij, subj, sentence_id)
