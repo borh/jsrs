@@ -149,7 +149,7 @@ def biplot(data, labels=None, type='sentence'):
 
     readers = list(set(reader for result in data for reader, _ in result))
 
-    m = np.matrix([[dict(result).get(reader, 0.0) for reader in readers] for result in data]) # ro.NA_Real
+    m = np.matrix([[dict(result).get(reader, ro.NA_Real) for reader in readers] for result in data])
 
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H%M%S')
     svg_filename = 'c5ml-{}-{}.svg'.format(type, timestamp)
@@ -158,21 +158,22 @@ def biplot(data, labels=None, type='sentence'):
     m = np.asarray(m) # Convert back to ndarray as rpy2 blows the recursion stack with matrices.
     nc, nr = m.shape # Flipped because of transpose below:
     rm = ro.FloatVector(m.transpose().reshape((m.size)))
-
     rm = ro.r.matrix(rm, nrow=nr, ncol=nc)
     ro.globalenv["rm"] = rm
+
     if labels:
         ro.globalenv["col.labels"] = ro.StrVector(labels)
     else:
         ro.globalenv["col.labels"] = ro.StrVector(list('s' + str(i) for i in range(1, nc + 1)))
+
     ro.globalenv["row.labels"] = ro.StrVector(readers)
 
     r('colnames(rm) <- col.labels')
     r('rownames(rm) <- row.labels')
-    r('pca <- prcomp(rm)')
-    #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit)')
+    r('library(pcaMethods)')
+    r('pca <- pca(rm)') # Deals with NAs better using nipalsPca.
+    #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit, scale=TRUE)') # center=FALSE, scale=TRUE
     r('biplot(pca)')
-   # ro.r['biplot'](pca)
 
     r('dev.off()')
 
