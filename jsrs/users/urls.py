@@ -55,7 +55,7 @@ urlpatterns = [
     ),
 
     url(
-        regex=r'^export_table/$',
+        regex=r'^export_table$',
         view=views.export_table,
         name='export_table'
     ),

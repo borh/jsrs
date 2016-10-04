@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 from django_pandas.io import read_frame
 
@@ -123,4 +123,4 @@ def rater_survey(request):
 
 @login_required
 def export_table(request):
-    return HttpResponse(read_frame(Rater.objects.all()).to_html())
+    return HttpResponse(read_frame(User.objects.all()).to_html())
