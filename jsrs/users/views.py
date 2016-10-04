@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
+from django_pandas.io import read_frame
+
 from .models import User, Rater
 from .forms import RaterForm
 
@@ -118,3 +120,7 @@ def rater_survey(request):
     return render(request,
                   'users/rater_survey.html',
                   {'form': form})
+
+@login_required
+def export_table(request):
+    return HttpResponse(read_frame(Rater.objects.all()).to_html())

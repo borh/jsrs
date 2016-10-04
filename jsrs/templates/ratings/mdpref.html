@@ -5,7 +5,22 @@
 {% if request.user.is_authenticated %}
   <div class="row">
     <div class="content-rating col-md-12">
+
+      <div class="m-x-auto">
+        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'ratings:export_table' %}">View all ratings</button>
+        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'users:export_table' %}">View all raters</button>
+        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:export_table' %}">View all audio</button>
+        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:reader_export_table' %}">View all readers</button>
+        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:sentence_export_table' %}">View all sentences</button>
+      </div>
+
       {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
+        <h4>Thurstone Case V (c5ml)-based sentence biplot</h4>
+        <img src="{{ MEDIA_URL }}{{ c5ml_sentence_biplot_svg }}" />
+
+        <h4>Thurstone Case V (c5ml)-based rater biplot</h4>
+        <img src="{{ MEDIA_URL }}{{ c5ml_rater_biplot_svg }}" />
+
         <div class="col-sm-6">
           <h4>Thurstone results for sentence id {{ forloop.counter }}</h4>
           <div class="card card-block">

@@ -53,4 +53,10 @@ urlpatterns = [
         view=views.rater_survey,
         name='rater_survey'
     ),
+
+    url(
+        regex=r'^export_table/$',
+        view=views.export_table,
+        name='export_table'
+    ),
 ]

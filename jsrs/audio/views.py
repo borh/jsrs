@@ -14,7 +14,7 @@ from django.db import connection
 from django_pandas.io import read_frame
 #import pandas as pd
 
-from .models import Audio
+from .models import Audio, Reader, Sentence
 
 @login_required
 def audio_export_table(request):
@@ -47,3 +47,11 @@ def audio_export_table(request):
     #print(data)
     #return HttpResponse(pd.DataFrame.from_records(data).to_html())
     return HttpResponse(read_frame(Audio.objects.all()).to_html())
+
+@login_required
+def audio_reader_export_table(request):
+    return HttpResponse(read_frame(Reader.objects.all()).to_html())
+
+@login_required
+def audio_sentence_export_table(request):
+    return HttpResponse(read_frame(Sentence.objects.all()).to_html())
