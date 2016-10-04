@@ -5,21 +5,41 @@
 {% if request.user.is_authenticated %}
   <div class="row">
     <div class="content-rating col-md-12">
-      {% for results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
-      <h4>Thurstone results for sentence id {{ forloop.counter }}</h4>
-      <div class="card card-block">
-        <table class="table table-sm">
-          <thead><tr><th>Reader</th><th>Score</th></tr></thead>
-          <tbody>
-          {% for reader, score in thurstone_results %}
-          <tr>
-            <td>{{ reader }}</td>
-            <td>{{ score }}</td>
-          </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
+        <div class="col-sm-6">
+          <h4>Thurstone results for sentence id {{ forloop.counter }}</h4>
+          <div class="card card-block">
+            <table class="table table-sm">
+              <thead><tr><th>Rank</th><th>Reader</th><th>Score</th></tr></thead>
+              <tbody>
+                {% for reader, score in thurstone_results %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ reader }}</td>
+                    <td>{{ score }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <h4>Thurstone Case V results for sentence id {{ forloop.counter }}</h4>
+          <div class="card card-block">
+            <table class="table table-sm">
+              <thead><tr><th>Rank</th><th>Reader</th><th>Score</th></tr></thead>
+              <tbody>
+                {% for reader, score in c5ml_results %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ reader }}</td>
+                    <td>{{ score }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       <h4>mdprefml results for sentence id {{ forloop.counter }}</h4>
       <img src="{{ MEDIA_URL }}{{ svg }}" />
       <p>
@@ -49,7 +69,7 @@
       </p>
       <div class="collapse" id="sresults{{ forloop.counter }}">
         <div class="card card-block">
-          <pre>{{ results }}</pre>
+          <pre>{{ mdpref_results }}</pre>
         </div>
       </div>
       <p>

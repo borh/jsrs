@@ -102,17 +102,25 @@ def mdprefml(f, n, ij, subj, sentence_id):
     svg_filename = 'mdprefml-{}-{}.svg'.format(timestamp, sentence_id)
     r('svg("jsrs/media/{}", width=12, height=12)'.format(svg_filename))
 
-    result = None
+    mdpref_result = None
+
     try:
-        result = mdpref.mdprefml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.StrVector(ij), nrow=len(f)), ro.StrVector(subj), print=0, plot=1)
+        mdpref_result = mdpref.mdprefml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.StrVector(ij), nrow=len(f)), ro.StrVector(subj), ndim=2, lmax=500, print=0, plot=1)
+
     except Exception as e:
         msg = 'Exception while running mdprefml on sentence {}: {}'.format(sentence_id, e)
-        result = msg
+        mdpref_result = msg
         logger.warn(msg)
         logger.warn('mdprefml input was: {}, {}, {}, {}'.format(tuple(ro.IntVector(f).rclass), tuple(ro.IntVector(n).rclass), tuple(ro.r.matrix(ro.StrVector(ij), nrow=len(f)).rclass), tuple(ro.StrVector(subj).rclass)))
 
     r('dev.off()')
 
-    reader_ranks, rater_ranks = rank_ratings(result)
+    c5ml_result = mdpref.c5ml(ro.IntVector(f), ro.IntVector(n), ro.r.matrix(ro.StrVector(ij), nrow=len(f)), print=0)
+    c5ml_xs = c5ml_result.rx2('xs')
+    c5ml_names = ro.r['names'](c5ml_xs)
+    c5ml_result = dict(zip(c5ml_names, c5ml_xs))
+    c5ml_result = sorted(c5ml_result.items(), key = lambda x: x[1], reverse = True)
 
-    return (result, svg_filename, reader_ranks, rater_ranks)
+    reader_ranks, rater_ranks = rank_ratings(mdpref_result)
+
+    return (mdpref_result, c5ml_result, svg_filename, reader_ranks, rater_ranks)
