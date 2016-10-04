@@ -439,7 +439,7 @@ def get_thurstone_results(sentence_id):
     # n = len(readers)
 
     comparisons = defaultdict(dict)
-    for n, f, a_reader, b_reader in d: # Difference from reference implementation: we don't have an equal number of comparisons per item, so we have to normalize on a case-by-case basis.
+    for f, n, a_reader, b_reader in d: # Difference from reference implementation: we don't have an equal number of comparisons per item, so we have to normalize on a case-by-case basis.
         comparisons[a_reader][b_reader] = f / n
         comparisons[b_reader][a_reader] = (n - f) / n
 
