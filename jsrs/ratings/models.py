@@ -453,7 +453,7 @@ def get_thurstone_results(sentence_id):
 
 def get_c5ml_sentence_biplot(sentence_data):
 
-    svg_filename = biplot(sentence_data)
+    svg_filename = biplot([sentence for sentence in sentence_data if not isinstance(sentence, str)])
 
     return svg_filename
 
