@@ -457,7 +457,7 @@ def get_next_rating(user_id):
     a_model = Audio.objects.get(id=audio_files[0][0])
     b_model = Audio.objects.get(id=audio_files[0][1])
     ab = [a_model, b_model]
-    # random.shuffle(ab) # FIXME need a order-stable algo to make this safe
+    # random.shuffle(ab) # FIXME need an order-stable algo to make this safe
     a, b = ab
 
     try:
