@@ -14,12 +14,17 @@
         <a class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:sentence_export_table' %}">View all sentences</a>
       </div>
 
-      {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
-        <h4>Thurstone Case V (c5ml)-based sentence biplot</h4>
-        <img src="{{ MEDIA_URL }}{{ c5ml_sentence_biplot_svg }}" />
+      <h3>Summary results</h3>
 
-        <h4>Thurstone Case V (c5ml)-based rater biplot</h4>
-        <img src="{{ MEDIA_URL }}{{ c5ml_rater_biplot_svg }}" />
+      <h4>Thurstone Case V (c5ml)-based sentence biplot</h4>
+      <img src="{{ MEDIA_URL }}{{ c5ml_sentence_biplot_svg }}" />
+
+      <h4>Thurstone Case V (c5ml)-based rater biplot</h4>
+      <img src="{{ MEDIA_URL }}{{ c5ml_rater_biplot_svg }}" />
+
+      <h3>By-sentence results</h3>
+
+      {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
 
         <div class="col-sm-6">
           <h4>Thurstone results for sentence id {{ forloop.counter }}</h4>
