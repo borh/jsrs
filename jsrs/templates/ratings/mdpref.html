@@ -6,12 +6,12 @@
   <div class="row">
     <div class="content-rating col-md-12">
 
-      <div class="m-x-auto">
-        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'ratings:export_table' %}">View all ratings</button>
-        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'users:export_table' %}">View all raters</button>
-        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:export_table' %}">View all audio</button>
-        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:reader_export_table' %}">View all readers</button>
-        <button class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:sentence_export_table' %}">View all sentences</button>
+      <div class="m-x-auto" style="width: 100%;">
+        <a class="btn btn-primary" type="button" target="_blank" href="{% url 'ratings:export_table' %}">View all ratings</a>
+        <a class="btn btn-primary" type="button" target="_blank" href="{% url 'users:export_table' %}">View all raters</a>
+        <a class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:export_table' %}">View all audio</a>
+        <a class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:reader_export_table' %}">View all readers</a>
+        <a class="btn btn-primary" type="button" target="_blank" href="{% url 'audio:sentence_export_table' %}">View all sentences</a>
       </div>
 
       {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
