@@ -83,8 +83,8 @@ def get_all_ratings():
 SELECT
   COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
   rl.n AS n, -- total number of comparisons between a and b
-  re_a.name || '.' || r.sentence_id AS i,
-  re_b.name || '.' || r.sentence_id AS j,
+  re_a.name AS i,
+  re_b.name AS j,
   rl.subject
 FROM
   ratings_ratings AS r,
