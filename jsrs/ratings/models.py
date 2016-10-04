@@ -193,6 +193,43 @@ ORDER BY
   b_reader''', [sentence_id, sentence_id])
     return cursor.fetchall()
 
+def get_rater_comparison_matrix(rater_id):
+    cursor = connection.cursor()
+    cursor.execute('''
+SELECT
+  COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+  rl.n AS n, -- total number of comparisons between a and b
+  a.name AS a_reader,
+  b.name AS b_reader
+FROM
+  ratings_ratings AS r,
+  LATERAL (
+    SELECT
+      count(*) AS n,
+      audio_a_id,
+      audio_b_id
+    FROM ratings_ratings
+    WHERE user_id = %s
+    GROUP BY audio_a_id, audio_b_id
+  ) AS rl,
+  audio_reader AS a,
+  audio_reader AS b
+WHERE
+  user_id = %s AND
+  r.a_gt_b IS TRUE AND
+  r.audio_a_id = rl.audio_a_id AND
+  r.audio_b_id = rl.audio_b_id AND
+  r.reader_a_id = a.id AND
+  r.reader_b_id = b.id
+GROUP BY
+  rl.n,
+  a_reader,
+  b_reader
+ORDER BY
+  a_reader,
+    b_reader''', [rater_id, rater_id])
+    return cursor.fetchall()
+
 
 def get_all_ratings_summary():
     return Ratings.objects.all()
@@ -354,6 +391,11 @@ def get_sentence_sets():
 def get_readers():
     cursor = connection.cursor()
     cursor.execute('''SELECT DISTINCT reader FROM audio_audio ORDER BY reader''')
+    return [row[0] for row in cursor.fetchall()]
+
+def get_unique_raters():
+    cursor = connection.cursor()
+    cursor.execute('SELECT DISTINCT user_id FROM ratings_ratings ORDER BY user_id')
     return [row[0] for row in cursor.fetchall()]
 
 def get_ratings_per_sentence():
