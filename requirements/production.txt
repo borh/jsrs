@@ -13,11 +13,11 @@ gunicorn==19.6.0
 
 # Static and Media Storage
 # ------------------------------------------------
-boto==2.42.0
+boto==2.43.0
 django-storages-redux==1.3.2
 # Collectfast==0.2.3
 brotlipy
 
 # Email backends for Mailgun, Postmark, SendGrid and more
 # -------------------------------------------------------
-django-anymail==0.5
+django-anymail==0.6.1
