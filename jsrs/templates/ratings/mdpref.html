@@ -32,13 +32,15 @@
             <table class="table table-sm">
               <thead><tr><th>Rank</th><th>Reader</th><th>Score</th></tr></thead>
               <tbody>
-                {% for reader, score in thurstone_results %}
-                  <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ reader }}</td>
-                    <td>{{ score }}</td>
-                  </tr>
-                {% endfor %}
+                {% if thurstone_results.all %}
+                  {% for reader, score in thurstone_results %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ reader }}</td>
+                      <td>{{ score }}</td>
+                    </tr>
+                  {% endfor %}
+                {% endif %}
               </tbody>
             </table>
           </div>
@@ -49,13 +51,15 @@
             <table class="table table-sm">
               <thead><tr><th>Rank</th><th>Reader</th><th>Score</th></tr></thead>
               <tbody>
-                {% for reader, score in c5ml_results %}
-                  <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ reader }}</td>
-                    <td>{{ score }}</td>
-                  </tr>
-                {% endfor %}
+                {% if thurstone_results.all %}
+                  {% for reader, score in c5ml_results %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ reader }}</td>
+                      <td>{{ score }}</td>
+                    </tr>
+                  {% endfor %}
+                {% endif %}
               </tbody>
             </table>
           </div>
