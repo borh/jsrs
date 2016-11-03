@@ -171,9 +171,13 @@ def biplot(data, labels=None, type='sentence'):
     r('colnames(rm) <- col.labels')
     r('rownames(rm) <- row.labels')
     r('library(pcaMethods)')
-    r('pca <- pca(rm)') # Deals with NAs better using nipalsPca.
-    #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit, scale=TRUE)') # center=FALSE, scale=TRUE
-    r('biplot(pca)')
+    try:
+        r('pca <- pca(completeObs(rm), method="ppca")') # Deals with NAs better using nipalsPca.
+        #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit, scale=TRUE)') # center=FALSE, scale=TRUE
+        r('biplot(pca)')
+    except Exception as e:
+        msg = 'Exception while running pca: {}'.format(e)
+        logger.warn(msg)
 
     r('dev.off()')
 
