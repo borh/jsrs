@@ -476,9 +476,11 @@ def get_c5ml_rater_biplot():
             results.append(c5ml_result)
             labels.remove(rater_id)
 
-    svg_filename = biplot(results,
-                          labels=[User.objects.get(id=rater_id).username for rater_id in labels],
-                          type='rater')
+    svg_filename = biplot(
+        results,
+        labels=[User.objects.get(id=rater_id).username for rater_id in labels],
+        type='rater'
+    )
 
     return svg_filename
 
