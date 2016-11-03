@@ -32,7 +32,7 @@
             <table class="table table-sm">
               <thead><tr><th>Rank</th><th>Reader</th><th>Score</th></tr></thead>
               <tbody>
-                {% if thurstone_results.all %}
+                {% if thurstone_results %}
                   {% for reader, score in thurstone_results %}
                     <tr>
                       <td>{{ forloop.counter }}</td>
@@ -51,7 +51,7 @@
             <table class="table table-sm">
               <thead><tr><th>Rank</th><th>Reader</th><th>Score</th></tr></thead>
               <tbody>
-                {% if thurstone_results.all %}
+                {% if thurstone_results %}
                   {% for reader, score in c5ml_results %}
                     <tr>
                       <td>{{ forloop.counter }}</td>
