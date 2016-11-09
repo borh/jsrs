@@ -414,6 +414,30 @@ def get_mdpref_results(sentence_id):
 
     return mdprefml(f, n, ij, subj, sentence_id)
 
+
+import pandas as pd
+import math
+def get_complete_comparison_matrix(sentence_id):
+    d = get_comparison_matrix(sentence_id)
+
+    readers = set([r[2] for r in d])
+    readers |= set([r[3] for r in d])
+    readers = sorted(readers)
+
+    comparisons = defaultdict(dict)
+    for f, n, a_reader, b_reader in d:
+        comparisons[a_reader][b_reader] = n
+        comparisons[b_reader][a_reader] = n
+
+    m = [[comparisons[ri][ro] if (ri != ro and ri in comparisons and ro in comparisons[ri]) else math.nan
+          for ri in readers]
+         for ro in readers]
+
+    df = pd.DataFrame(m, index = [Reader.objects.get(id=reader_id).name for reader_id in readers], columns = [Reader.objects.get(id=reader_id).name for reader_id in readers])
+
+    return df.to_html(na_rep = '')
+
+
 def get_thurstone_results(sentence_id):
     '''Retrieves comparison trails data from the database and converts it into a comparison matrix as a Numpy array for calculation by the Thurstone method:
  n  | f | a_reader | b_reader

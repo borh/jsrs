@@ -24,8 +24,14 @@
 
       <h3>By-sentence results</h3>
 
-      {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results in data %}
+      {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results, matrix in data %}
 
+        <div class="col-sm-12">
+          <h4>Ratings matrix (cell values are number of ratings) for sentence id {{ forloop.counter }}</h4>
+          <div class="card card-block">
+            {{ matrix|safe }}
+          </div>
+        </div>
         <div class="col-sm-6">
           <h4>Thurstone results for sentence id {{ forloop.counter }}</h4>
           <div class="card card-block">

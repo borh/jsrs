@@ -15,7 +15,7 @@ from django_pandas.io import read_frame
 
 from ..users.models import Rater
 from ..audio.models import Audio
-from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary, get_unrated_pair, get_mdpref_results, get_thurstone_results, get_c5ml_sentence_biplot, get_c5ml_rater_biplot
+from .models import Ratings, get_next_rating, ratings_done, get_all_ratings_summary, get_unrated_pair, get_mdpref_results, get_complete_comparison_matrix, get_thurstone_results, get_c5ml_sentence_biplot, get_c5ml_rater_biplot
 from .forms import RatingsForm
 
 import logging
@@ -110,7 +110,7 @@ def ratings_page(request):
 
 @login_required
 def mdpref_results(request):
-    data = [get_mdpref_results(sentence_id) + tuple([get_thurstone_results(sentence_id)])
+    data = [get_mdpref_results(sentence_id) + tuple([get_thurstone_results(sentence_id)]) + tuple([get_complete_comparison_matrix(sentence_id)])
             for sentence_id in range(1, 41)]
     c5ml_sentence_biplot_svg = get_c5ml_sentence_biplot([m[1] for m in data])
     c5ml_rater_biplot_svg = get_c5ml_rater_biplot()
