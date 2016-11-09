@@ -162,11 +162,11 @@ def biplot(data, labels=None, type='sentence'):
     ro.globalenv["rm"] = rm
 
     if labels:
-        ro.globalenv["col.labels"] = ro.StrVector(labels)
+        ro.globalenv['col.labels'] = ro.StrVector(labels)
     else:
-        ro.globalenv["col.labels"] = ro.StrVector(list('s' + str(i) for i in range(1, nc + 1)))
+        ro.globalenv['col.labels'] = ro.StrVector(list('s' + str(i) for i in range(1, nc + 1)))
 
-    ro.globalenv["row.labels"] = ro.StrVector(readers)
+    ro.globalenv['row.labels'] = ro.StrVector(readers)
 
     r('colnames(rm) <- col.labels')
     r('rownames(rm) <- row.labels')
