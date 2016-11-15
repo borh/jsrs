@@ -329,7 +329,7 @@ SELECT
   s.id AS sentence_id,
   (SELECT count(*) FROM ratings_ratings AS rr
    WHERE rr.audio_a_id = aa.id
-     AND rr.audio_b_id = aa.id) AS n_ab,
+     AND rr.audio_b_id = ab.id) AS n_ab,
   (SELECT count(*) FROM ratings_ratings AS rr
    WHERE (    rr.audio_a_id = aa.id
           AND rr.a_gt_b IS TRUE)
