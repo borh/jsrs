@@ -328,6 +328,9 @@ SELECT
   rb.name AS b_reader,
   s.id AS sentence_id,
   (SELECT count(*) FROM ratings_ratings AS rr
+   WHERE rr.audio_a_id = aa.id
+     AND rr.audio_b_id = aa.id) AS n_ab,
+  (SELECT count(*) FROM ratings_ratings AS rr
    WHERE (    rr.audio_a_id = aa.id
           AND rr.a_gt_b IS TRUE)
       OR (    rr.audio_b_id = aa.id
@@ -366,8 +369,9 @@ WHERE
   AND ra.disabled IS FALSE
   AND rb.disabled IS FALSE
 ORDER BY
-  --w_a::float / n_a::float DESC, -- would need this defined top-level
+  -- w_a::float / n_a::float DESC, -- would need this defined top-level
   ts.id_n ASC,
+  n_ab ASC,
   n_a ASC,
   n_b ASC,
   w_a DESC,

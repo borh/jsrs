@@ -136,7 +136,7 @@ def ratings_export_table(request):
 @login_required
 def next_pair_export_table(request):
     data = get_unrated_pair(request.user.id, limit=1000)
-    df = pd.DataFrame.from_records(data, columns=['a_audio_id', 'b_audio_id', 'a_reader', 'b_reader', 'sentence_id', 'w_a', 'w_b', 'n_a', 'n_b'])
+    df = pd.DataFrame.from_records(data, columns=['a_audio_id', 'b_audio_id', 'a_reader', 'b_reader', 'sentence_id', 'n_ab', 'w_a', 'w_b', 'n_a', 'n_b'])
     return HttpResponse(df.to_html())
 
 # from io import StringIO
