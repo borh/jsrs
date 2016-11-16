@@ -421,6 +421,12 @@ def get_mdpref_results(sentence_id):
 
 import pandas as pd
 import math
+def count_na_cells(matrix):
+    return np.count_nonzero(~np.isnan(matrix))
+
+def count_cells(matrix):
+    return matrix.shape[0] * matrix.shape[1]
+
 def get_complete_comparison_matrix(sentence_id):
     d = get_comparison_matrix(sentence_id)
 
@@ -439,7 +445,11 @@ def get_complete_comparison_matrix(sentence_id):
 
     df = pd.DataFrame(m, index = [Reader.objects.get(id=reader_id).name for reader_id in readers], columns = [Reader.objects.get(id=reader_id).name for reader_id in readers])
 
-    return df.to_html(na_rep = '')
+    na_cells = count_na_cells(df)
+    cells = count_cells(df)
+    percent = "{:10.1f}%".format(na_cells / cells * 100 if cells > 0 else 0.0)
+
+    return (df.to_html(na_rep = ''), na_cells, cells, percent)
 
 
 def get_thurstone_results(sentence_id):
