@@ -16,6 +16,7 @@ ROOT_DIR = environ.Path(__file__) - 3  # (jsrs/config/settings/common.py - 3 = j
 APPS_DIR = ROOT_DIR.path('jsrs')
 
 env = environ.Env()
+env.read_env()
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
