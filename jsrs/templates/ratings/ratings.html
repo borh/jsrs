@@ -44,6 +44,12 @@
         <p class="text-primary">{{ sentence_text }}</p>
       </blockquote>
 
+      {% if request.user.is_superuser %}
+        <div class="alert alert-warning" role="alert">
+          admin権限のユーザは評価が登録されません
+        </div>
+      {% endif %}
+
       <div id="rating" class="hide center-block text-center">
         <form action="{% url 'ratings:ratings' %}" method="post">
           {% csrf_token %}
