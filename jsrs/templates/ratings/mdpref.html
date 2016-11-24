@@ -26,6 +26,7 @@
 
       {% for mdpref_results, c5ml_results, svg, reader_ranks, rater_ranks, thurstone_results, matrix_data in data %}
 
+        <hr />
         <div class="col-sm-12">
           <h4>Ratings matrix (cell values are number of ratings) for sentence id {{ forloop.counter }}: {{ matrix_data.3 }} full ({{ matrix_data.1 }}/{{ matrix_data.2 }})</h4>
           <div class="card card-block">
