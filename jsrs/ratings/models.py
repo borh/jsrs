@@ -422,10 +422,10 @@ def get_mdpref_results(sentence_id):
 import pandas as pd
 import math
 def count_na_cells(matrix):
-    return np.count_nonzero(~np.isnan(matrix)) / 2
+    return int(np.count_nonzero(~np.isnan(matrix)) / 2 - matrix.shape[0])
 
 def count_cells(matrix):
-    return matrix.shape[0] * matrix.shape[1] / 2
+    return int((matrix.shape[0] * matrix.shape[1] - matrix.shape[0]) / 2)
 
 def get_complete_comparison_matrix(sentence_id):
     d = get_comparison_matrix(sentence_id)
