@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^app/?$', TemplateView.as_view(template_name='pages/home.html'), name="home"),
 
     # Django Admin, use {% url 'admin:index' %}
-    url(settings.ADMIN_URL, include(admin.site.urls)),
+    url(settings.ADMIN_URL, admin.site.urls),
 
     # User management
     url(r'^app/users/', include("jsrs.users.urls", namespace="users")),
@@ -33,3 +33,9 @@ if settings.DEBUG:
         url(r'^app/404/$', default_views.page_not_found, kwargs={'exception': Exception("Page not Found")}),
         url(r'^app/500/$', default_views.server_error),
     ]
+    if 'debug_toolbar' in settings.INSTALLED_APPS:
+        import debug_toolbar
+
+        urlpatterns += [
+            url(r'^__debug__/', include(debug_toolbar.urls)),
+        ]

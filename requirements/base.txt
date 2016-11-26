@@ -15,7 +15,6 @@ whitenoise==3.2.2
 # Forms
 django-braces==1.10.0
 django-crispy-forms==1.6.1
-django-floppyforms==1.7.0
 
 # Models
 django-model-utils==2.6
@@ -32,8 +31,7 @@ django-allauth==0.29.0
 psycopg2==2.6.2
 
 # Unicode slugification
-unicode-slugify==0.1.3
-django-autoslug==1.9.3
+awesome-slugify==1.6.5
 
 # Time zones support
 pytz==2016.7
@@ -43,9 +41,11 @@ django-redis==4.6.0
 redis>=2.10.5
 
 
-django-storages
 
-django_compressor==2.1
+
+rcssmin==1.0.6
+django-compressor==2.1
+
 
 # Your custom requirements go here
 rpy2

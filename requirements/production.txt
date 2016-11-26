@@ -17,6 +17,8 @@ boto==2.43.0
 # Collectfast==0.2.3
 brotlipy
 
+django-storages
+
 # Email backends for Mailgun, Postmark, SendGrid and more
 # -------------------------------------------------------
 django-anymail==0.6.1
