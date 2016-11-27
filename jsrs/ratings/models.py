@@ -527,17 +527,16 @@ def get_next_rating(user_id):
 
     a_model = Audio.objects.get(id=audio_files[0][0])
     b_model = Audio.objects.get(id=audio_files[0][1])
-    ab = [a_model, b_model]
-    # random.shuffle(ab) # FIXME need an order-stable algo to make this safe
-    a, b = ab
 
     try:
         sentence = Sentence.objects.get(id=a_model.sentence.id)
     except Exception as e:
         print('Exception getting sentence id="{}"'.format(a_model.sentence))
+        # Here we return an empty text sentence so that grading can
+        # still occur even without a full transcript.
         sentence = Sentence(id=a_model.id, text='')
 
-    return (a, b, sentence.text)
+    return (a_model, b_model, sentence.text)
 
 def ratings_done(user_id):
     return Ratings.objects.filter(user_id=user_id).count()
