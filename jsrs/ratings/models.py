@@ -328,8 +328,10 @@ SELECT
   rb.name AS b_reader,
   s.id AS sentence_id,
   (SELECT count(*) FROM ratings_ratings AS rr
-   WHERE rr.audio_a_id = aa.id
-     AND rr.audio_b_id = ab.id) AS n_ab,
+    WHERE (   rr.audio_a_id = aa.id
+          AND rr.audio_b_id = ab.id)
+       OR (   rr.audio_a_id = ab.id
+          AND rr.audio_b_id = aa.id)) AS n_ab,
   (SELECT count(*) FROM ratings_ratings AS rr
    WHERE (    rr.audio_a_id = aa.id
           AND rr.a_gt_b IS TRUE)
