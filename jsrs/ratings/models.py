@@ -282,9 +282,9 @@ WITH user_ratings AS (
   SELECT
     s.id AS sentence_id,
     s.order AS sentence_order,
-    count(r.id) AS id_n,
+    count(r.id) AS id_n, -- number of ratings for sentence_id
     s.set AS sentence_set,
-    sum(count(r.id)) OVER (PARTITION BY s.set) AS set_n
+    sum(count(r.id)) OVER (PARTITION BY s.set) AS set_n -- number of ratings for sentence_set
   FROM
     audio_sentence AS s
   JOIN
