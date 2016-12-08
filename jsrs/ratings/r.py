@@ -171,9 +171,14 @@ def biplot(data, labels=None, type='sentence'):
     try:
         r('colnames(rm) <- col.labels')
         r('rownames(rm) <- row.labels')
+
+        r('rm <- rm[rowSums(is.na(rm)) != ncol(rm), ]') # Remove empty rows.
+        r('rm <- rm[, colSums(is.na(rm)) != nrow(rm)]') # Remove empty cols.
+
         r('library(pcaMethods)')
 
-        r('pca <- pca(completeObs(rm), method="ppca")') # Deals with NAs better using nipalsPca.
+        ## r('pca <- pca(completeObs(rm), method="ppca")') # Deals with NAs better using nipalsPca. completeObs not provided!?
+        r('pca <- pca(rm, method="ppca")') # Deals with NAs better using nipalsPca.
         #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit, scale=TRUE)') # center=FALSE, scale=TRUE
         r('biplot(pca)')
     except Exception as e:
