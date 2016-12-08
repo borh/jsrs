@@ -333,14 +333,14 @@ SELECT
        OR (   rr.audio_a_id = ab.id
           AND rr.audio_b_id = aa.id)) AS n_ab,
   (SELECT count(*) FROM ratings_ratings AS rr
-   WHERE (    rr.audio_a_id = aa.id
-          AND rr.a_gt_b IS TRUE)
-      OR (    rr.audio_b_id = aa.id
-          AND rr.a_gt_b IS FALSE)) AS w_a,
+    WHERE (    rr.audio_a_id = aa.id
+           AND rr.a_gt_b IS TRUE)
+       OR (    rr.audio_b_id = aa.id
+           AND rr.a_gt_b IS FALSE)) AS w_a,
   (SELECT count(*) FROM ratings_ratings AS rr
-   WHERE (    rr.audio_b_id = ab.id
+    WHERE (   rr.audio_b_id = ab.id
           AND rr.a_gt_b IS FALSE)
-      OR (    rr.audio_a_id = ab.id
+       OR (   rr.audio_a_id = ab.id
           AND rr.a_gt_b IS TRUE)) AS w_b,
   (SELECT count(*) FROM ratings_ratings AS rr
    WHERE rr.audio_a_id = aa.id
