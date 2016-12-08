@@ -168,10 +168,11 @@ def biplot(data, labels=None, type='sentence'):
 
     ro.globalenv['row.labels'] = ro.StrVector(readers)
 
-    r('colnames(rm) <- col.labels')
-    r('rownames(rm) <- row.labels')
-    r('library(pcaMethods)')
     try:
+        r('colnames(rm) <- col.labels')
+        r('rownames(rm) <- row.labels')
+        r('library(pcaMethods)')
+
         r('pca <- pca(completeObs(rm), method="ppca")') # Deals with NAs better using nipalsPca.
         #r('pca <- prcomp(~., data=as.data.frame(rm), na.action=na.omit, scale=TRUE)') # center=FALSE, scale=TRUE
         r('biplot(pca)')
