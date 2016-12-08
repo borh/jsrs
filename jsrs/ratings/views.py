@@ -43,10 +43,10 @@ def ratings_page(request):
             a_gt_b = form.cleaned_data['a_gt_b']
 
             # Enforce correct order in database.
-            if audio_a.id > audio_b.id:
+            if audio_a.reader_id > audio_b.reader_id:
                 audio_a, audio_b = audio_b, audio_a
                 a_gt_b = not a_gt_b
-                logger.debug('Reversing shuffling in ratings: a => {}, b => {}, a_gt_b => {}'.format(audio_a, audio_b, a_gt_b))
+                logger.debug('Reversing shuffling in ratings: a => {}, b => {}, a_gt_b => {} based on reader_b_id < reader_a_id'.format(audio_a, audio_b, a_gt_b))
 
             r = Ratings(
                 audio_a=audio_a,
