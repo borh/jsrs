@@ -94,7 +94,9 @@ def ratings_page(request):
     rated = ratings_done(request.user.id)
     rated_goal = 50 # TODO make sentence set-specific
 
-    logger.debug('New rating requested for user={} sound_file_a={} sound_file_b={}'.format(request.user.id, sound_file_a.id, sound_file_b.id))
+    logger.debug('New rating requested for user={} sound_file_a={} ({}) sound_file_b={} ({})'.format(request.user.id,
+                                                                                                     sound_file_a.id, sound_file_a.path,
+                                                                                                     sound_file_b.id, sound_file_b.path))
 
     return render(request,
                   'ratings/ratings.html',
