@@ -32,91 +32,91 @@ class Ratings(models.Model):
 
 from django.db import connection
 
-def get_all_ratings_by_sentence():
-    cursor = connection.cursor()
-    cursor.execute('''
-SELECT
-  COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
-  rl.n AS n, -- total number of comparisons between a and b
-  re_a.name AS i,
-  re_b.name AS j,
-  rl.subject,
-  r.sentence_id
-FROM
-  ratings_ratings AS r,
-  audio_reader AS re_a,
-  audio_reader AS re_b,
-  LATERAL (
-    SELECT
-      user_id AS subject,
-      count(*) AS n,
-      audio_a_id,
-      audio_b_id,
-      sentence_id
-    FROM ratings_ratings
-    GROUP BY audio_a_id, audio_b_id, user_id, sentence_id
-  ) AS rl
-WHERE
-  r.a_gt_b IS TRUE AND
-  r.user_id = rl.subject AND
-  r.audio_a_id = rl.audio_a_id AND
-  r.audio_b_id = rl.audio_b_id AND
-  r.sentence_id = rl.sentence_id AND
-  r.reader_a_id = re_a.id AND
-  r.reader_b_id = re_b.id
-GROUP BY
-  r.sentence_id,
-  rl.n,
-  i,
-  j,
-  rl.subject
-ORDER BY
-  r.sentence_id,
-  i,
-  j,
-  rl.subject''')
-    return cursor.fetchall()
+## def get_all_ratings_by_sentence():
+##     cursor = connection.cursor()
+##     cursor.execute('''
+## SELECT
+##   COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+##   rl.n AS n, -- total number of comparisons between a and b
+##   re_a.name AS i,
+##   re_b.name AS j,
+##   rl.subject,
+##   r.sentence_id
+## FROM
+##   ratings_ratings AS r,
+##   audio_reader AS re_a,
+##   audio_reader AS re_b,
+##   LATERAL (
+##     SELECT
+##       user_id AS subject,
+##       count(*) AS n,
+##       audio_a_id,
+##       audio_b_id,
+##       sentence_id
+##     FROM ratings_ratings
+##     GROUP BY audio_a_id, audio_b_id, user_id, sentence_id
+##   ) AS rl
+## WHERE
+##   r.a_gt_b IS TRUE AND
+##   r.user_id = rl.subject AND
+##   r.audio_a_id = rl.audio_a_id AND
+##   r.audio_b_id = rl.audio_b_id AND
+##   r.sentence_id = rl.sentence_id AND
+##   r.reader_a_id = re_a.id AND
+##   r.reader_b_id = re_b.id
+## GROUP BY
+##   r.sentence_id,
+##   rl.n,
+##   i,
+##   j,
+##   rl.subject
+## ORDER BY
+##   r.sentence_id,
+##   i,
+##   j,
+##   rl.subject''')
+##     return cursor.fetchall()
 
 
-def get_all_ratings():
-    cursor = connection.cursor()
-    cursor.execute('''
-SELECT
-  COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
-  rl.n AS n, -- total number of comparisons between a and b
-  re_a.name AS i,
-  re_b.name AS j,
-  rl.subject
-FROM
-  ratings_ratings AS r,
-  audio_reader AS re_a,
-  audio_reader AS re_b,
-  LATERAL (
-    SELECT
-      user_id AS subject,
-      count(*) AS n,
-      audio_a_id,
-      audio_b_id
-    FROM ratings_ratings
-    GROUP BY audio_a_id, audio_b_id, user_id
-  ) AS rl
-WHERE
-  r.a_gt_b IS TRUE AND
-  r.user_id = rl.subject AND
-  r.audio_a_id = rl.audio_a_id AND
-  r.audio_b_id = rl.audio_b_id AND
-  r.reader_a_id = re_a.id AND
-  r.reader_b_id = re_b.id
-GROUP BY
-  i,
-  j,
-  rl.n,
-  rl.subject
-ORDER BY
-  i,
-  j,
-  rl.subject''')
-    return cursor.fetchall()
+## def get_all_ratings():
+##     cursor = connection.cursor()
+##     cursor.execute('''
+## SELECT
+##   COUNT(r.a_gt_b) AS f, -- number of times a was greater than b
+##   rl.n AS n, -- total number of comparisons between a and b
+##   re_a.name AS i,
+##   re_b.name AS j,
+##   rl.subject
+## FROM
+##   ratings_ratings AS r,
+##   audio_reader AS re_a,
+##   audio_reader AS re_b,
+##   LATERAL (
+##     SELECT
+##       user_id AS subject,
+##       count(*) AS n,
+##       audio_a_id,
+##       audio_b_id
+##     FROM ratings_ratings
+##     GROUP BY audio_a_id, audio_b_id, user_id
+##   ) AS rl
+## WHERE
+##   r.a_gt_b IS TRUE AND
+##   r.user_id = rl.subject AND
+##   r.audio_a_id = rl.audio_a_id AND
+##   r.audio_b_id = rl.audio_b_id AND
+##   r.reader_a_id = re_a.id AND
+##   r.reader_b_id = re_b.id
+## GROUP BY
+##   i,
+##   j,
+##   rl.n,
+##   rl.subject
+## ORDER BY
+##   i,
+##   j,
+##   rl.subject''')
+##     return cursor.fetchall()
 
 
 def get_all_ratings_per_sentence(sentence_id):
