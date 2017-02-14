@@ -13,6 +13,7 @@ from collections import defaultdict
 from django.utils.translation import ugettext_lazy as _
 BOOL_CHOICES = ((True, _('Yes')), (False, _('No')))
 
+
 class Ratings(models.Model):
     audio_a   = models.ForeignKey(Audio, related_name='audio_a_fk', on_delete=models.CASCADE)
     audio_b   = models.ForeignKey(Audio, related_name='audio_b_fk', on_delete=models.CASCADE)
