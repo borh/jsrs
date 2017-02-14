@@ -446,7 +446,8 @@ def get_complete_comparison_matrix(sentence_id):
           for ri in readers]
          for ro in readers]
 
-    df = pd.DataFrame(m, index = [Reader.objects.get(id=reader_id).name for reader_id in readers], columns = [Reader.objects.get(id=reader_id).name for reader_id in readers])
+    display_names = [Reader.objects.get(id=reader_id).name for reader_id in readers]
+    df = pd.DataFrame(m, index=display_names, columns=display_names)
 
     na_cells = count_na_cells(df)
     cells = count_cells(df)
