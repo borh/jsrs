@@ -9,11 +9,11 @@
 
 gevent==1.2.1
 
-gunicorn==19.6.0
+gunicorn==19.7.1
 
 # Static and Media Storage
 # ------------------------------------------------
-boto==2.45.0
+boto==2.46.1
 # Collectfast==0.2.3
 brotlipy
 

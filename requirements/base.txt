@@ -5,7 +5,7 @@
 wheel==0.29.0
 
 # Bleeding edge Django
-django==1.10.5
+django==1.10.6
 
 # Configuration
 django-environ==0.4.1
@@ -24,17 +24,17 @@ Pillow==4.0.0
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
-django-allauth==0.30.0
+django-allauth==0.31.0
 
 
 # Python-PostgreSQL Database Adapter
-psycopg2==2.6.2
+psycopg2==2.7.1
 
 # Unicode slugification
 awesome-slugify==1.6.5
 
 # Time zones support
-pytz==2016.10
+pytz==2017.2
 
 # Redis support
 django-redis==4.7.0
