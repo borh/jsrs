@@ -1,14 +1,65 @@
-# jsrs
+# Japanese Speech Rating System
 
-Japanese Speech Rating System
+Source URL: https://github.com/borh/jsrs
 
-LICENSE: MIT
+Hosted instances:
 
-Settings
---------
+-   https://cuckoo.js.ila.titech.ac.jp/app/
+-   https://cuckoo.js.ila.titech.ac.jp/c-jsrs/
 
-Moved to
-[settings](http://cookiecutter-django.readthedocs.org/en/latest/settings.html).
+## Summary
+
+The Japanese Speech Rating System (JSRS) is a Python (Django) server and client application that crowdsources preference ratings of Japanese learner speech. The basic rating scheme is that raters indicate their preference between two Japanese learners speaking the same sentence.
+
+The system also includes a sophisticated analysis module powered by the mdpref R package developed by [Okubo & Mayekawa (2015)](https://doi.org/10.1007/s11336-013-9392-7) available [here](http://www.ms.hum.titech.ac.jp/Rpackages.html).
+
+## Dataset import
+
+Currently, audio files and associated metadata must be imported from a spreadsheet.
+Dataset import files (Django fixtures) are generated using the provided [generate_fixtures.py](generate_fixtures.py) script contained in the project's root directory.
+
+### Audio file import
+
+Audio files must be place under `audio` and have the following directory and naming structure:
+
+<!--- TODO -->
+
+WAV files will be automatically converted to MP3 format. All files will also be normalized with mp3gain.
+
+### Metadata import
+
+You will need to create an Excel file named `データID.xlsx` containing the following structure:
+
+First sheet containing the set of sentences with number corresponding to the number used in the audio file name, order the priority of the sentence, and sentence text showing the original text stimulus:
+
+| number | order | text |
+| --- | --- | --- |
+| 2 | 1 | こんにちは |
+| 8 | 2 | 二つで一万円でした。 |
+| 13 | 3 | いっしょに旅行に行きましょう。 |
+| 37 | 4 | ここでは写真をとらないで下さい。 |
+
+Second sheet containing :
+
+| old_name | gender | name | disabled |
+| --- | --- | --- | --- |
+| n001 | M | p001 | 0 |
+| n002 | F | p002 | 0 |
+| n003 | M | p003 | 0 |
+| n004 | F | p004 | 0 |
+
+Third sheet containing :
+
+| old_name | sentence_id | new_name |
+| --- | --- | --- |
+| n001 | 1 | p001 |
+| n001 | 2 | p001 |
+| n001 | 3 | p001 |
+| n001 | 4 | p001 |
+
+## Settings
+
+General settings are inherited from the Cookiecutter Django template. See the [settings](http://cookiecutter-django.readthedocs.org/en/latest/settings.html) documentation there.
 
 ## Python Environment
 
@@ -41,6 +92,8 @@ R CMD INSTALL lazy.mdpref
 cd ..
 ```
 
+Create the database and run schema migrations:
+
 ```bash
 createdb -U postgres jsrs # -U <user-running-jsrs-app> would be better
 # 'sudo -u postgres createdb -U postgres jsrs' under peer auth
@@ -70,7 +123,7 @@ grunt serve
 
 Visit localhost:8000 to check if everything worked.
 
-## Loading audio file fixtures
+## Loading audio, sentence, and reader file fixtures
 
 First generate audio fixtures using provided python script. Then load the fixtures into the database.
 
@@ -78,11 +131,12 @@ Audio files should be accessible from `media/`.
 
 ```bash
 ./generate_fixtures.py
-python manage.py loaddata audio-files-fixtures.json
+python manage.py loaddata audio-sentence-fixtures.json
+python manage.py loaddata audio-reader-fixtures.json
+python manage.py loaddata audio-audio-fixtures.json
 ```
 
-Basic Commands
---------------
+## Basic Commands
 
 ### Setting Up Your Users
 
@@ -123,8 +177,7 @@ compilation](http://cookiecutter-django.readthedocs.org/en/latest/live-reloading
 
 It's time to write the code!!!
 
-Running end to end integration tests
-------------------------------------
+## Running end to end integration tests
 
 N.B. The integration tests will not run on Windows.
 
@@ -149,8 +202,7 @@ Subsequent test runs will be much quicker.
 The testing framework runs Django, Celery (if enabled), Postgres,
 HitchSMTP (a mock SMTP server), Firefox/Selenium and Redis.
 
-Deployment
-----------
+## Deployment
 
 We providing tools and instructions for deploying using Docker and
 Heroku.
@@ -174,7 +226,7 @@ The steps below are only for the record, *do not* run them after initial project
 First set up a Python 3 virtual environment:
 
 ```bash
-pyvenv venv # alternatively: virtualenv-3.5 venv
+pyvenv venv # alternatively: virtualenv-3.6 venv
 source venv/bin/activate # or activate.fish/etc. depending on your shell
 pip install --upgrade pip
 ```
@@ -185,3 +237,13 @@ Use cookiecutter to generate project:
 pip install --upgrade cookiecutter
 cookiecutter https://github.com/pydanny/cookiecutter-django.git
 ```
+
+# License
+
+This project is licensed under the [MIT license](LICENSE).
+
+<!---
+# Funding
+
+This project is partially funded by ....
+-->
