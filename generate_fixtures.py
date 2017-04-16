@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 '''
+Prerequisites:
+    - ffmpeg
+    - mp3gain
+
 Audio file paths must be formatted according to the following convention:
 
 /path/to/$recording_set/$reader/$sentence.mp3
