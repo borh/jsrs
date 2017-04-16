@@ -103,12 +103,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Visit localhost:8000 to check if everything worked.
+Visit localhost:8000 in your browser to check if everything worked.
 
 Optionally setting up MailHog as SMTP app:
 
 ```bash
-curl -O https://github.com/mailhog/MailHog/releases/download/v0.1.8/MailHog_linux_amd64
+curl -O https://github.com/mailhog/MailHog/releases/download/v0.2.1/MailHog_linux_amd64
 mv MailHog_linux_amd64 mailhog
 chmod +x mailhog
 export DJANGO_EMAIL_BACKEND=./mailhog
