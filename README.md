@@ -11,7 +11,7 @@ Hosted instances:
 
 The Japanese Speech Rating System (JSRS) is a Python (Django) server and client application that crowdsources preference ratings of Japanese learner speech. The basic rating scheme is that raters indicate their preference between two Japanese learners speaking the same sentence.
 
-The system also includes a sophisticated analysis module powered by the mdpref R package developed by [Okubo & Mayekawa (2015)](https://doi.org/10.1007/s11336-013-9392-7) available [here](http://www.ms.hum.titech.ac.jp/Rpackages.html).
+The system also includes a sophisticated analysis module powered by the mdpref R package developed by [Okubo & Mayekawa (2015)](https://doi.org/10.1007/s11336-013-9392-7) available [here](http://mayekawa.in.coocan.jp/Rpackages.html).
 
 ## Dataset import
 
@@ -79,16 +79,17 @@ Install needed R pacakges (see [README](R/README.md)):
 
 ```bash
 cd R
-curl -O http://www.ms.hum.titech.ac.jp/mayekawadocs/Rpackages/lazy.mat_0.1.2.zip
-curl -O http://www.ms.hum.titech.ac.jp/mayekawadocs/Rpackages/lazy.tools_0.1.2.zip
-curl -O http://www.ms.hum.titech.ac.jp/mayekawadocs/Rpackages/lazy.mdpref_0.1.2.zip
-unzip -x lazy.mat_0.1.2.zip
-unzip -x lazy.tools_0.1.2.zip
+curl -O http://mayekawa.in.coocan.jp/Rpackages/lazy.mat_0.1.3.zip
+curl -O http://mayekawa.in.coocan.jp/Rpackages/lazy.tools_0.1.3.zip
+curl -O http://mayekawa.in.coocan.jp/Rpackages/lazy.mdpref_0.1.2.zip
+unzip -x lazy.mat_0.1.3.zip
+unzip -x lazy.tools_0.1.3.zip
 unzip -x lazy.mdpref_0.1.2.zip
 Rscript -e "install.packages('naturalsort')"
 R CMD INSTALL lazy.mat
 R CMD INSTALL lazy.tools
 R CMD INSTALL lazy.mdpref
+Rscript -e "source(\"http://bioconductor.org/biocLite.R\"); biocLite(\"pcaMethods\")"
 cd ..
 ```
 
