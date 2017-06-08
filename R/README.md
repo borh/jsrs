@@ -2,7 +2,7 @@
 
 ## Downloading Prerequisites
 
-Download `lazy.mat`, `lazy.tools`, and `lazy.mdpref` from <http://www.ms.hum.titech.ac.jp/Rpackages.html>.
+Download `lazy.mat`, `lazy.tools`, and `lazy.mdpref` from <http://mayekawa.in.coocan.jp/Rpackages.html>.
 
 Unzip all packages before proceeding to the next step.
 
