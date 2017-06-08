@@ -9,7 +9,7 @@ Hosted instances:
 
 ## Summary
 
-The Japanese Speech Rating System (JSRS) is a Python (Django) server and client application that crowdsources preference ratings of Japanese learner speech. The basic rating scheme is that raters indicate their preference between two Japanese learners speaking the same sentence.
+The Japanese Speech Rating System (JSRS) is a Python (Django) server and client application that crowdsources preference ratings of Japanese learner speech. Raters listen to two consequitive readings of the same sentence spoken by non-native and native Japanese speakers and indicate their preference between them.
 
 The system also includes a sophisticated analysis module powered by the mdpref R package developed by [Okubo & Mayekawa (2015)](https://doi.org/10.1007/s11336-013-9392-7) available [here](http://mayekawa.in.coocan.jp/Rpackages.html).
 
