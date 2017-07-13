@@ -13,7 +13,7 @@ gunicorn==19.7.1
 
 # Static and Media Storage
 # ------------------------------------------------
-boto==2.47.0
+boto==2.48.0
 # Collectfast==0.2.3
 brotlipy
 
