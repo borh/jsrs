@@ -69,6 +69,8 @@ source venv/bin/activate # or activate.fish/etc. depending on your shell
 
 ## Initial Setup
 
+### Packages
+
 ```bash
 pip install -r requirements/local.txt
 pip install -r requirements/production.txt
@@ -93,6 +95,8 @@ Rscript -e "source(\"http://bioconductor.org/biocLite.R\"); biocLite(\"pcaMethod
 cd ..
 ```
 
+### Database
+
 Create the database and run schema migrations:
 
 ```bash
@@ -101,6 +105,30 @@ createdb -U postgres jsrs # -U <user-running-jsrs-app> would be better
 # Replace as necessary:
 export DATABASE_URL="postgres://<pg_user_name>:<pg_user_password>@127.0.0.1:5432/jsrs"
 python manage.py migrate
+```
+
+Alternatively, if importing an existing database dump `jsrs-2017-07-19.sql` into `jsrs-dbname`:
+
+```bash
+createdb -T template0 -U postgres jsrs-dbname
+psql -U postgres jsrs-dbname < jsrs-2017-07-19.sql
+```
+
+## Environment
+
+Look at `env.example` and adjust accordingly. Then, load the environment variables into the environment before running the app.
+
+## Testing Production
+
+```bash
+./gunicorn.sh
+```
+
+## Testing Development
+
+NOTE: Currenly only production settings are supported.
+
+```bash
 python manage.py runserver
 ```
 
