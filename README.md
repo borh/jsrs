@@ -39,7 +39,7 @@ First sheet containing the set of sentences with number corresponding to the num
 | 13 | 3 | いっしょに旅行に行きましょう。 |
 | 37 | 4 | ここでは写真をとらないで下さい。 |
 
-Second sheet containing :
+Second sheet containing:
 
 | old_name | gender | name | disabled |
 | --- | --- | --- | --- |
@@ -48,7 +48,7 @@ Second sheet containing :
 | n003 | M | p003 | 0 |
 | n004 | F | p004 | 0 |
 
-Third sheet containing :
+Third sheet containing:
 
 | old_name | sentence_id | new_name |
 | --- | --- | --- |
