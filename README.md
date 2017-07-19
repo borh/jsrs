@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/52085135.svg)](https://zenodo.org/badge/latestdoi/52085135)
+
 # Japanese Speech Rating System
 
 Source URL: https://github.com/borh/jsrs
