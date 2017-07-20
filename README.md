@@ -1,6 +1,8 @@
-[![DOI](https://zenodo.org/badge/52085135.svg)](https://zenodo.org/badge/latestdoi/52085135)
 
 # Japanese Speech Rating System
+
+-   DOI: [![DOI](https://zenodo.org/badge/52085135.svg)](https://zenodo.org/badge/latestdoi/52085135)
+-   Build status: [![CircleCI](https://circleci.com/gh/borh/jsrs/tree/master.svg?style=svg)](https://circleci.com/gh/borh/jsrs/tree/master)
 
 Source URL: https://github.com/borh/jsrs
 
