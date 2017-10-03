@@ -1,0 +1,16 @@
+/* @media (max-width: 47.9em) {
+    .navbar-nav .nav-item {
+        display: inline-block;
+        float: none;
+        width: 100%; }
+    .navbar-nav .nav-item + .nav-item {
+        margin-left: 0; }
+    .nav.navbar-nav.pull-xs-right {
+        float: none !important; } } */
+
+[hidden][style="display: block;"] {
+    display: block !important; }
+
+.hide {
+  visibility: hidden;
+  display: none; }
