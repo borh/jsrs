@@ -2,14 +2,14 @@
 # like Pillow and psycopg2
 # See http://bitly.com/wheel-building-fails-CPython-35
 # Verified bug on Python 3.5.1
-wheel==0.29.0
+wheel==0.30.0
 
 # Bleeding edge Django
-django==1.11.3
+django==1.11.5
 
 # Configuration
-django-environ==0.4.3
-whitenoise==3.3.0
+django-environ==0.4.4
+whitenoise==3.3.1
 
 
 # Forms
@@ -20,15 +20,15 @@ django-crispy-forms==1.6.1
 django-model-utils==3.0.0
 
 # Images
-Pillow==4.2.1
+Pillow==4.3.0
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
-django-allauth==0.32.0
+django-allauth==0.33.0
 
 
 # Python-PostgreSQL Database Adapter
-psycopg2==2.7.1
+psycopg2==2.7.3.1
 
 # Unicode slugification
 awesome-slugify==1.6.5
@@ -38,13 +38,13 @@ pytz==2017.2
 
 # Redis support
 django-redis==4.8.0
-redis>=2.10.5
+redis>=2.10.6
 
 
 
 
 rcssmin==1.0.6
-django-compressor==2.1.1
+django-compressor==2.2
 
 
 # Your custom requirements go here

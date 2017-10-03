@@ -21,4 +21,4 @@ django-storages
 
 # Email backends for Mailgun, Postmark, SendGrid and more
 # -------------------------------------------------------
-django-anymail==0.11
+django-anymail==1.0
