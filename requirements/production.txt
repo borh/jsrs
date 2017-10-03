@@ -6,18 +6,14 @@
 
 # WSGI Handler
 # ------------------------------------------------
-
 gevent==1.2.2
-
 gunicorn==19.7.1
 
 # Static and Media Storage
 # ------------------------------------------------
-boto==2.48.0
-# Collectfast==0.2.3
+boto3==1.4.7
+django-storages==1.6.5
 brotlipy
-
-django-storages
 
 # Email backends for Mailgun, Postmark, SendGrid and more
 # -------------------------------------------------------
