@@ -103,7 +103,15 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///jsrs'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '/jsrs',
+        'USER': env.db('DATABASE_USER', default=''),
+        'PASSWORD': env.db('DATABASE_PASSWORD', default=''),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+        'CONN_MAX_AGE': 0
+    }
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
